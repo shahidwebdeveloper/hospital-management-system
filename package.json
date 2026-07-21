@@ -1,0 +1,52 @@
+{
+  "name": "hospital-management-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Professional MERN stack Hospital Management System with TypeScript, RBAC, dashboards, and modular clinical workflows.",
+  "workspaces": [
+    "apps/api",
+    "apps/web",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev --workspace apps/api\" \"npm:dev --workspace apps/web\"",
+    "dev:api": "npm run dev --workspace apps/api",
+    "dev:web": "npm run dev --workspace apps/web",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "prepare": "husky"
+  },
+  "keywords": [
+    "hospital",
+    "mern",
+    "typescript",
+    "express",
+    "react",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.20.0",
+    "@typescript-eslint/parser": "^8.20.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2",
+    "typescript-eslint": "^8.20.0",
+    "typescript": "^5.7.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,css,md}": [
+      "prettier --write"
+    ]
+  }
+}
