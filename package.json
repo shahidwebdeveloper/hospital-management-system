@@ -5,14 +5,14 @@
   "type": "module",
   "description": "Professional MERN stack Hospital Management System with TypeScript, RBAC, dashboards, and modular clinical workflows.",
   "workspaces": [
-    "apps/api",
-    "apps/web",
-    "packages/*"
+    "contracts",
+    "server",
+    "client"
   ],
   "scripts": {
-    "dev": "concurrently \"npm:dev --workspace apps/api\" \"npm:dev --workspace apps/web\"",
-    "dev:api": "npm run dev --workspace apps/api",
-    "dev:web": "npm run dev --workspace apps/web",
+    "dev": "npm run build --workspace @hms/contracts && concurrently \"npm:dev --workspace @hms/server\" \"npm:dev --workspace @hms/client\"",
+    "dev:server": "npm run dev --workspace @hms/server",
+    "dev:client": "npm run dev --workspace @hms/client",
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier . --write",

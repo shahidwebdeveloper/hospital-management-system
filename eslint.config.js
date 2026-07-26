@@ -18,7 +18,7 @@ export default tseslint.config(
   {
     languageOptions: {
       parserOptions: {
-        project: ["./apps/api/tsconfig.json", "./apps/web/tsconfig.json"],
+        project: ["./contracts/tsconfig.json", "./server/tsconfig.json", "./client/tsconfig.json"],
         tsconfigRootDir: import.meta.dirname
       }
     },
@@ -31,13 +31,13 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          "argsIgnorePattern": "^_"
+          argsIgnorePattern: "^_"
         }
       ],
       "@typescript-eslint/no-misused-promises": [
         "error",
         {
-          "checksVoidReturn": false
+          checksVoidReturn: false
         }
       ]
     }

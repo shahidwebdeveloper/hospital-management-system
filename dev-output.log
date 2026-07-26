@@ -1,0 +1,49 @@
+
+> hospital-management-system@0.1.0 dev
+> npm run build --workspace @hms/contracts && concurrently "npm:dev --workspace @hms/server" "npm:dev --workspace @hms/client"
+
+
+> @hms/contracts@0.1.0 build
+> tsc -p tsconfig.json
+
+[dev] 
+[dev] > @hms/client@0.1.0 dev
+[dev] > vite --host 0.0.0.0
+[dev] 
+[dev] 
+[dev] > @hms/server@0.1.0 dev
+[dev] > tsx watch src/server.ts
+[dev] 
+[dev] Port 5173 is in use, trying another one...
+[dev] 
+[dev]   [32m[1mVITE[22m v6.4.3[39m  [2mready in [0m[1m1644[22m[2m[0m ms[22m
+[dev] 
+[dev]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5174[22m/[39m
+[dev]   [32m➜[39m  [1mNetwork[22m: [36mhttp://10.208.145.215:[1m5174[22m/[39m
+[dev] MongoDB connected
+[dev] node:events:487
+[dev]       throw er; // Unhandled 'error' event
+[dev]       ^
+[dev] 
+[dev] Error: listen EADDRINUSE: address already in use :::5001
+[dev]     at Server.setupListenHandle [as _listen2] (node:net:2008:16)
+[dev]     at listenInCluster (node:net:2065:12)
+[dev]     at Server.listen (node:net:2170:7)
+[dev]     at app.listen (C:\Users\shahi\Desktop\HMS\node_modules\express\lib\application.js:635:24)
+[dev]     at bootstrap (C:\Users\shahi\Desktop\HMS\server\src\server.ts:12:7)
+[dev]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[dev] Emitted 'error' event on Server instance at:
+[dev]     at emitErrorNT (node:net:2044:8)
+[dev]     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+[dev]   code: 'EADDRINUSE',
+[dev]   errno: -4091,
+[dev]   syscall: 'listen',
+[dev]   address: '::',
+[dev]   port: 5001
+[dev] }
+[dev] 
+[dev] Node.js v24.15.0
+[dev] [2m4:36:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[dev] [2m4:36:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[dev] [2m4:37:25 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
+[dev] [2m4:42:01 PM[22m [36m[1m[vite][22m[39m changed tsconfig file detected: C:/Users/shahi/Desktop/HMS/client/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
