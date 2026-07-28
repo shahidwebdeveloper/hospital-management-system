@@ -76,6 +76,7 @@ export default function Register() {
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="text"
+              autoComplete="name"
               {...register("name")}
             />
           </label>
@@ -86,6 +87,7 @@ export default function Register() {
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="email"
+              autoComplete="email"
               {...register("email")}
             />
           </label>
@@ -96,6 +98,7 @@ export default function Register() {
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="password"
+              autoComplete="new-password"
               {...register("password")}
             />
           </label>
@@ -108,6 +111,7 @@ export default function Register() {
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="password"
+              autoComplete="new-password"
               {...register("confirmPassword")}
             />
           </label>

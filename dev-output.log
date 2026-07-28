@@ -7,43 +7,242 @@
 > tsc -p tsconfig.json
 
 [dev] 
+[dev] > @hms/server@0.1.0 dev
+[dev] > tsx watch src/server.ts
+[dev] 
+[dev] 
 [dev] > @hms/client@0.1.0 dev
 [dev] > vite --host 0.0.0.0
 [dev] 
 [dev] 
-[dev] > @hms/server@0.1.0 dev
-[dev] > tsx watch src/server.ts
+[dev]   [32m[1mVITE[22m v6.4.3[39m  [2mready in [0m[1m735[22m[2m[0m ms[22m
 [dev] 
-[dev] Port 5173 is in use, trying another one...
-[dev] 
-[dev]   [32m[1mVITE[22m v6.4.3[39m  [2mready in [0m[1m1644[22m[2m[0m ms[22m
-[dev] 
-[dev]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5174[22m/[39m
-[dev]   [32m➜[39m  [1mNetwork[22m: [36mhttp://10.208.145.215:[1m5174[22m/[39m
+[dev]   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[dev]   [32m➜[39m  [1mNetwork[22m: [36mhttp://10.208.145.215:[1m5173[22m/[39m
 [dev] MongoDB connected
-[dev] node:events:487
-[dev]       throw er; // Unhandled 'error' event
-[dev]       ^
+[dev] HMS API running on http://localhost:5000/api/v1
+[dev] [0mGET /api/v1/health [32m200[0m 12.583 ms - 138[0m
+[dev] [2m11:30:50 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/signup-page.tsx, /src/styles/globals.css[22m
+[dev] [2m11:30:50 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/signup-page.tsx, /src/styles/globals.css[22m
+[dev] [2m11:30:51 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\shahi\Desktop\hospital-management-system\client\src\pages\signup-page.tsx: Unexpected token (78:25)
 [dev] 
-[dev] Error: listen EADDRINUSE: address already in use :::5001
-[dev]     at Server.setupListenHandle [as _listen2] (node:net:2008:16)
-[dev]     at listenInCluster (node:net:2065:12)
-[dev]     at Server.listen (node:net:2170:7)
-[dev]     at app.listen (C:\Users\shahi\Desktop\HMS\node_modules\express\lib\application.js:635:24)
-[dev]     at bootstrap (C:\Users\shahi\Desktop\HMS\server\src\server.ts:12:7)
-[dev]     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
-[dev] Emitted 'error' event on Server instance at:
-[dev]     at emitErrorNT (node:net:2044:8)
-[dev]     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
-[dev]   code: 'EADDRINUSE',
-[dev]   errno: -4091,
-[dev]   syscall: 'listen',
-[dev]   address: '::',
-[dev]   port: 5001
-[dev] }
+[dev] [0m [90m 76 |[31m             [33m<[31m[33minput[31m
+[dev]  [90m 77 |[31m               className[33m=[31m[32m"mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"[31m
+[dev] [31m[1m>[22m[31m[90m 78 |[31m               type[33m=[31m[32m"text"[31m[32m`r`[31mn              autoComplete[33m=[31m[32m"name"[31m[32m`r`[31mn              {[33m...[31mregister([32m"name"[31m)}
+[dev]  [90m    |[31m                          [31m[1m^[22m[31m
+[dev]  [90m 79 |[31m             [33m/[31m[33m>[31m
+[dev]  [90m 80 |[31m           [33m<[31m[33m/[31m[33mlabel[31m[33m>[31m
+[dev]  [90m 81 |[31m           {errors[33m.[31mname [33m?[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-sm text-destructive"[31m[33m>[31m{errors[33m.[31mname[33m.[31mmessage}[33m<[31m[33m/[31m[33mp[31m[33m>[31m [33m:[31m [36mnull[31m}[0m[39m
+[dev]   Plugin: [35mvite:react-babel[39m
+[dev]   File: [36mC:/Users/shahi/Desktop/hospital-management-system/client/src/pages/signup-page.tsx[39m:78:25
+[dev] [33m  77 |                className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
+[dev]   78 |                type="text"`r`n              autoComplete="name"`r`n              {...register("name")}
+[dev]   79 |              />
+[dev]      |  ^
+[dev]   80 |            </label>
+[dev]   81 |            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}[39m
+[dev]       at constructor (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:365:19)
+[dev]       at TypeScriptParserMixin.raise (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6616:19)
+[dev]       at TypeScriptParserMixin.unexpected (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6636:16)
+[dev]       at TypeScriptParserMixin.jsxParseIdentifier (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4581:12)
+[dev]       at TypeScriptParserMixin.jsxParseNamespacedName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4588:23)
+[dev]       at TypeScriptParserMixin.jsxParseAttribute (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4664:22)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4679:28)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10060:18)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4674:17)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4698:33)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4761:17)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4771:19)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:39
+[dev]       at TypeScriptParserMixin.tryParse (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6924:20)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:18)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12443:12)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:17)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12510:17)
+[dev]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11692:28)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11348:23)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4776:20)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9803:20)
+[dev]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10801:23)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12438:16)
+[dev]       at TypeScriptParserMixin.parseExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:17)
+[dev]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:13159:28)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12815:21)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9525:18)
+[dev] [2m11:30:51 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\shahi\Desktop\hospital-management-system\client\src\pages\signup-page.tsx: Unexpected token (78:25)
 [dev] 
-[dev] Node.js v24.15.0
-[dev] [2m4:36:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
-[dev] [2m4:36:47 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
-[dev] [2m4:37:25 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/main.tsx[22m
-[dev] [2m4:42:01 PM[22m [36m[1m[vite][22m[39m changed tsconfig file detected: C:/Users/shahi/Desktop/HMS/client/tsconfig.json - Clearing cache and forcing full-reload to ensure TypeScript is compiled with updated config values.
+[dev] [0m [90m 76 |[31m             [33m<[31m[33minput[31m
+[dev]  [90m 77 |[31m               className[33m=[31m[32m"mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"[31m
+[dev] [31m[1m>[22m[31m[90m 78 |[31m               type[33m=[31m[32m"text"[31m[32m`r`[31mn              autoComplete[33m=[31m[32m"name"[31m[32m`r`[31mn              {[33m...[31mregister([32m"name"[31m)}
+[dev]  [90m    |[31m                          [31m[1m^[22m[31m
+[dev]  [90m 79 |[31m             [33m/[31m[33m>[31m
+[dev]  [90m 80 |[31m           [33m<[31m[33m/[31m[33mlabel[31m[33m>[31m
+[dev]  [90m 81 |[31m           {errors[33m.[31mname [33m?[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-sm text-destructive"[31m[33m>[31m{errors[33m.[31mname[33m.[31mmessage}[33m<[31m[33m/[31m[33mp[31m[33m>[31m [33m:[31m [36mnull[31m}[0m[39m
+[dev]   Plugin: [35mvite:react-babel[39m
+[dev]   File: [36mC:/Users/shahi/Desktop/hospital-management-system/client/src/pages/signup-page.tsx[39m:78:25
+[dev] [33m  77 |                className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
+[dev]   78 |                type="text"`r`n              autoComplete="name"`r`n              {...register("name")}
+[dev]   79 |              />
+[dev]      |  ^
+[dev]   80 |            </label>
+[dev]   81 |            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}[39m
+[dev]       at constructor (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:365:19)
+[dev]       at TypeScriptParserMixin.raise (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6616:19)
+[dev]       at TypeScriptParserMixin.unexpected (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6636:16)
+[dev]       at TypeScriptParserMixin.jsxParseIdentifier (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4581:12)
+[dev]       at TypeScriptParserMixin.jsxParseNamespacedName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4588:23)
+[dev]       at TypeScriptParserMixin.jsxParseAttribute (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4664:22)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4679:28)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10060:18)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4674:17)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4698:33)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4761:17)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4771:19)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:39
+[dev]       at TypeScriptParserMixin.tryParse (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6924:20)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:18)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12443:12)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:17)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12510:17)
+[dev]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11692:28)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11348:23)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4776:20)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9803:20)
+[dev]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10801:23)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12438:16)
+[dev]       at TypeScriptParserMixin.parseExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:17)
+[dev]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:13159:28)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12815:21)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9525:18)
+[dev] [2m11:31:20 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[dev] [2m11:31:20 AM[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m Pre-transform error: C:\Users\shahi\Desktop\hospital-management-system\client\src\pages\signup-page.tsx: Unexpected token (78:25)
+[dev] 
+[dev] [0m [90m 76 |[39m             [33m<[39m[33minput[39m
+[dev]  [90m 77 |[39m               className[33m=[39m[32m"mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"[39m
+[dev] [31m[1m>[22m[39m[90m 78 |[39m               type[33m=[39m[32m"text"[39m[32m`r`[39mn              autoComplete[33m=[39m[32m"name"[39m[32m`r`[39mn              {[33m...[39mregister([32m"name"[39m)}
+[dev]  [90m    |[39m                          [31m[1m^[22m[39m
+[dev]  [90m 79 |[39m             [33m/[39m[33m>[39m
+[dev]  [90m 80 |[39m           [33m<[39m[33m/[39m[33mlabel[39m[33m>[39m
+[dev]  [90m 81 |[39m           {errors[33m.[39mname [33m?[39m [33m<[39m[33mp[39m className[33m=[39m[32m"text-sm text-destructive"[39m[33m>[39m{errors[33m.[39mname[33m.[39mmessage}[33m<[39m[33m/[39m[33mp[39m[33m>[39m [33m:[39m [36mnull[39m}[0m
+[dev]   Plugin: [35mvite:react-babel[39m
+[dev]   File: [36mC:/Users/shahi/Desktop/hospital-management-system/client/src/pages/signup-page.tsx[39m:78:25
+[dev] [33m  77 |                className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
+[dev]   78 |                type="text"`r`n              autoComplete="name"`r`n              {...register("name")}
+[dev]   79 |              />
+[dev]      |  ^
+[dev]   80 |            </label>
+[dev]   81 |            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}[39m
+[dev] [2m11:31:21 AM[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\shahi\Desktop\hospital-management-system\client\src\pages\signup-page.tsx: Unexpected token (78:25)
+[dev] 
+[dev] [0m [90m 76 |[31m             [33m<[31m[33minput[31m
+[dev]  [90m 77 |[31m               className[33m=[31m[32m"mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"[31m
+[dev] [31m[1m>[22m[31m[90m 78 |[31m               type[33m=[31m[32m"text"[31m[32m`r`[31mn              autoComplete[33m=[31m[32m"name"[31m[32m`r`[31mn              {[33m...[31mregister([32m"name"[31m)}
+[dev]  [90m    |[31m                          [31m[1m^[22m[31m
+[dev]  [90m 79 |[31m             [33m/[31m[33m>[31m
+[dev]  [90m 80 |[31m           [33m<[31m[33m/[31m[33mlabel[31m[33m>[31m
+[dev]  [90m 81 |[31m           {errors[33m.[31mname [33m?[31m [33m<[31m[33mp[31m className[33m=[31m[32m"text-sm text-destructive"[31m[33m>[31m{errors[33m.[31mname[33m.[31mmessage}[33m<[31m[33m/[31m[33mp[31m[33m>[31m [33m:[31m [36mnull[31m}[0m[39m
+[dev]   Plugin: [35mvite:react-babel[39m
+[dev]   File: [36mC:/Users/shahi/Desktop/hospital-management-system/client/src/pages/signup-page.tsx[39m:78:25
+[dev] [33m  77 |                className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
+[dev]   78 |                type="text"`r`n              autoComplete="name"`r`n              {...register("name")}
+[dev]   79 |              />
+[dev]      |  ^
+[dev]   80 |            </label>
+[dev]   81 |            {errors.name ? <p className="text-sm text-destructive">{errors.name.message}</p> : null}[39m
+[dev]       at constructor (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:365:19)
+[dev]       at TypeScriptParserMixin.raise (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6616:19)
+[dev]       at TypeScriptParserMixin.unexpected (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6636:16)
+[dev]       at TypeScriptParserMixin.jsxParseIdentifier (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4581:12)
+[dev]       at TypeScriptParserMixin.jsxParseNamespacedName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4588:23)
+[dev]       at TypeScriptParserMixin.jsxParseAttribute (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4664:22)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4679:28)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAfterName (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10060:18)
+[dev]       at TypeScriptParserMixin.jsxParseOpeningElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4674:17)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4698:33)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElementAt (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4710:32)
+[dev]       at TypeScriptParserMixin.jsxParseElement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4761:17)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4771:19)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:39
+[dev]       at TypeScriptParserMixin.tryParse (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:6924:20)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9792:18)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12443:12)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10817:17)
+[dev]       at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12510:17)
+[dev]       at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11692:28)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11348:23)
+[dev]       at TypeScriptParserMixin.parseExprAtom (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:4776:20)
+[dev]       at TypeScriptParserMixin.parseExprSubscripts (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11098:23)
+[dev]       at TypeScriptParserMixin.parseUpdate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11083:21)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:11063:23)
+[dev]       at TypeScriptParserMixin.parseMaybeUnary (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9854:18)
+[dev]       at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10916:61)
+[dev]       at TypeScriptParserMixin.parseExprOps (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10921:23)
+[dev]       at TypeScriptParserMixin.parseMaybeConditional (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10898:23)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10848:21)
+[dev]       at TypeScriptParserMixin.parseMaybeAssign (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9803:20)
+[dev]       at TypeScriptParserMixin.parseExpressionBase (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10801:23)
+[dev]       at C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:39
+[dev]       at TypeScriptParserMixin.allowInAnd (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12438:16)
+[dev]       at TypeScriptParserMixin.parseExpression (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:10797:17)
+[dev]       at TypeScriptParserMixin.parseReturnStatement (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:13159:28)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:12815:21)
+[dev]       at TypeScriptParserMixin.parseStatementContent (C:\Users\shahi\Desktop\hospital-management-system\node_modules\@babel\parser\lib\index.js:9525:18)
+[dev] [2m11:31:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/signup-page.tsx, /src/styles/globals.css[22m
+[dev] [2m11:31:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
+[dev] [0mGET /api/v1/health [32m200[0m 1.109 ms - 139[0m
