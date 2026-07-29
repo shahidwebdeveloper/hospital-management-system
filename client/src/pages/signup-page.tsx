@@ -53,7 +53,7 @@ export default function Register() {
         email: parsed.data.email,
         password: parsed.data.password
       });
-      await navigate("/dashboard");
+      await navigate("/app/dashboard");
     } catch (error) {
       setFormError(error instanceof Error ? error.message : "Unable to create account");
     }

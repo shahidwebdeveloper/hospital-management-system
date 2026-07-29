@@ -246,3 +246,20 @@
 [dev] [2m11:31:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/signup-page.tsx, /src/styles/globals.css[22m
 [dev] [2m11:31:53 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mindex.html[22m
 [dev] [0mGET /api/v1/health [32m200[0m 1.109 ms - 139[0m
+[dev] [2m11:42:14 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/styles/globals.css[22m
+[dev] [2m11:43:41 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/styles/globals.css[22m
+[dev] [2m11:44:38 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/styles/globals.css[22m
+[dev] [2m11:44:38 AM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/pages/dashboard.tsx[22m
+[dev] 12:06:56 PM [tsx] change in ./src\routes\index.ts Restarting...
+[dev] MongoDB connected
+[dev] HMS API running on http://localhost:5000/api/v1
+[dev] [2m12:07:38 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/signin-page.tsx, /src/styles/globals.css, /src/pages/signup-page.tsx[22m
+[dev] [2m12:09:17 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/layouts/app-layout.tsx[22m
+[dev] [2m12:11:01 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/dashboard.tsx, /src/styles/globals.css[22m
+[dev] [2m12:11:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/router.tsx[22m
+[dev] 12:12:22 PM [tsx] change in ./src\modules\resources\resource-routes.ts Restarting...
+[dev] MongoDB connected
+[dev] HMS API running on http://localhost:5000/api/v1
+[dev] [0mGET /api/v1/resources/rules [32m200[0m 16.153 ms - -[0m
+[dev] [0mPOST /api/v1/resources/patients [32m201[0m 131.485 ms - 350[0m
+[dev] [0mGET /api/v1/resources/patients [32m200[0m 59.869 ms - 408[0m

@@ -35,7 +35,7 @@ export default function Login() {
 
     try {
       await login(parsed.data);
-      await navigate("/dashboard");
+      await navigate("/app/dashboard");
     } catch (error) {
       setFormError(error instanceof Error ? error.message : "Unable to sign in");
     }

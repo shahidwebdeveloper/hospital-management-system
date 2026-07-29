@@ -18,7 +18,35 @@ export function createApp() {
 
   app.use(
     cors({
-      origin: env.CLIENT_URL,
+      origin: (origin, callback) => {
+        const allowedOrigins = [
+          env.CLIENT_URL,
+          "http://localhost:5173",
+          "http://localhost:5174",
+          "http://127.0.0.1:5173",
+          "http://127.0.0.1:5174"
+        ];
+
+        if (!origin) {
+          callback(null, true);
+          return;
+        }
+
+        if (allowedOrigins.includes(origin)) {
+          callback(null, true);
+          return;
+        }
+
+        if (
+          env.NODE_ENV !== "production" &&
+          /^(http:\/\/localhost|http:\/\/127\.0\.0\.1):\d+$/.test(origin)
+        ) {
+          callback(null, true);
+          return;
+        }
+
+        callback(new Error("Not allowed by CORS"));
+      },
       credentials: true
     })
   );
