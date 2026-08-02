@@ -3,7 +3,7 @@ import { Navigate, createBrowserRouter } from "react-router-dom";
 import AppLayout from "./layouts/app-layout";
 import Dashboard from "./pages/dashboard";
 import LandingPage from "./pages/landing-page";
-import ModulePage from "./pages/modules/module-page";
+import ModulePage from "@/pages/modules/module-page";
 import Login from "./pages/signin-page";
 import Register from "./pages/signup-page";
 
@@ -26,7 +26,16 @@ import PatientListPage from "@/pages/patients/patient-list-page";
 import PatientFormPage from "@/pages/patients/patient-form-page";
 import PatientDetailsPage from "@/pages/patients/patient-details-page";
 
+import PharmacyListPage from "@/pages/pharmacy/PharmacyListPage";
+import PharmacyFormPage from "@/pages/pharmacy/PharmacyFormPage";
+import PharmacyDetailsPage from "@/pages/pharmacy/PharmacyDetailsPage";
+
+import BillingListPage from "@/pages/billing/BillingListPage";
+import BillingFormPage from "@/pages/billing/BillingFormPage";
+import BillingDetailsPage from "@/pages/billing/BillingDetailsPage";
+
 import AdminPage from "./pages/roles/admin-page";
+import UsersListPage from "./pages/roles/users-list-page";
 
 // Laboratory pages
 import RequestTestPage from "@/pages/laboratory/RequestTestPage";
@@ -35,16 +44,19 @@ import ResultEntryPage from "@/pages/laboratory/ResultEntryPage";
 import LaboratoryDetailsPage from "@/pages/laboratory/LaboratoryDetailsPage";
 
 import { moduleDefinitions } from "@hms/contracts";
+import ErrorPage from "./components/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />
+    element: <LandingPage />,
+    errorElement: <ErrorPage />
   },
 
   {
     path: "/app",
     element: <AppLayout />,
+    errorElement: <ErrorPage />,
 
     children: [
       {
@@ -177,6 +189,58 @@ export const router = createBrowserRouter([
         ]
       },
 
+      {
+        path: "pharmacy",
+
+        children: [
+          {
+            index: true,
+            element: <PharmacyListPage />
+          },
+
+          {
+            path: "new",
+            element: <PharmacyFormPage />
+          },
+
+          {
+            path: ":id",
+            element: <PharmacyDetailsPage />
+          },
+
+          {
+            path: ":id/edit",
+            element: <PharmacyFormPage />
+          }
+        ]
+      },
+
+      {
+        path: "billing",
+
+        children: [
+          {
+            index: true,
+            element: <BillingListPage />
+          },
+
+          {
+            path: "new",
+            element: <BillingFormPage />
+          },
+
+          {
+            path: ":id",
+            element: <BillingDetailsPage />
+          },
+
+          {
+            path: ":id/edit",
+            element: <BillingFormPage />
+          }
+        ]
+      },
+
       // ==========================
       // Laboratory Module
       // ==========================
@@ -192,7 +256,7 @@ export const router = createBrowserRouter([
 
           {
             path: "request",
-            element: <RequestTestPage doctorId="TEMP_DOCTOR_ID" />
+            element: <RequestTestPage />
           },
 
           {
@@ -209,7 +273,10 @@ export const router = createBrowserRouter([
 
       {
         path: "users",
-        element: <AdminPage />
+        children: [
+          { index: true, element: <AdminPage /> },
+          { path: "manage", element: <UsersListPage /> }
+        ]
       },
 
       ...moduleDefinitions.map((module) => ({

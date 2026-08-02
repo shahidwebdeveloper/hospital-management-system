@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
-import { moduleDefinitions } from "@hms/contracts";
+import { moduleDefinitions, roleLabels } from "@hms/contracts";
 import type { HospitalModule } from "@hms/contracts";
 
 import { Button } from "@/components/ui/button";
@@ -38,17 +38,25 @@ const moduleIcons: Record<HospitalModule | "dashboard", typeof LayoutDashboard> 
   settings: Settings
 };
 
-const navItems = [
+const navItemsBase = [
   { label: "Dashboard", path: "/app/dashboard", key: "dashboard" as const },
   ...moduleDefinitions.map((module) => ({
     label: module.label,
     path: `/app${module.path}`,
-    key: module.key
+    key: module.key,
+    allowedRoles: module.allowedRoles
   }))
 ];
 
 export default function AppLayout() {
   const { user, logout, loading } = useAuth();
+
+  const visibleNav = navItemsBase.filter((item) => {
+    if (item.key === "dashboard") return true;
+    const role = (user as any)?.role;
+    if (!role) return true;
+    return (item as any).allowedRoles?.includes(role) ?? true;
+  });
 
   return (
     <div className="min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[280px_1fr]">
@@ -64,7 +72,7 @@ export default function AppLayout() {
         </div>
 
         <nav className="flex gap-2 overflow-x-auto px-4 pb-4 lg:block lg:space-y-1 lg:overflow-visible">
-          {navItems.map((item) => {
+          {visibleNav.map((item) => {
             const Icon = moduleIcons[item.key];
             return (
               <NavLink
@@ -96,7 +104,18 @@ export default function AppLayout() {
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-medium">
                 <ShieldCheck className="h-4 w-4 text-primary" />
-                {loading ? "Checking session" : user ? user.name : "Demo mode"}
+                {loading ? (
+                  "Checking session"
+                ) : user ? (
+                  <span>
+                    <span className="font-medium">{user.name}</span>
+                    <span className="ml-2 text-sm text-muted-foreground">
+                      {roleLabels[user.role as any]}
+                    </span>
+                  </span>
+                ) : (
+                  "Demo mode"
+                )}
               </span>
               {user ? (
                 <Button variant="outline" onClick={() => void logout()}>

@@ -43,6 +43,8 @@ const resourcePayloadSchema = z.object({
 
 const updatePayloadSchema = resourcePayloadSchema.partial();
 
+import { authorizeResource } from "../../middlewares/authorize.js";
+
 export const resourceRouter = Router();
 
 function parseResourceKey(value: string): ResourceKey {
@@ -62,7 +64,7 @@ resourceRouter.get("/rules", (_req, res) => {
   );
 });
 
-resourceRouter.get("/:resource", async (req, res, next) => {
+resourceRouter.get("/:resource", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const definition = resourceDefinitionMap.get(key)!;
@@ -83,12 +85,19 @@ resourceRouter.get("/:resource", async (req, res, next) => {
         { title: { $regex: search, $options: "i" } },
         { summary: { $regex: search, $options: "i" } },
         { owner: { $regex: search, $options: "i" } },
-        ...definition.searchableFields.map((field) => ({ [`data.${field}`]: { $regex: search, $options: "i" } }))
+        ...definition.searchableFields.map((field) => ({
+          [`data.${field}`]: { $regex: search, $options: "i" }
+        }))
       ];
     }
 
     const [items, total] = await Promise.all([
-      model.find(filters).sort({ updatedAt: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+      model
+        .find(filters)
+        .sort({ updatedAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
       model.countDocuments(filters)
     ]);
 
@@ -109,16 +118,20 @@ resourceRouter.get("/:resource", async (req, res, next) => {
   }
 });
 
-resourceRouter.post("/:resource", async (req, res, next) => {
+resourceRouter.post("/:resource", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const definition = resourceDefinitionMap.get(key)!;
     const payload = resourcePayloadSchema.parse(req.body);
 
     if (!definition.statuses.includes(payload.status)) {
-      return res.status(400).json(
-        { success: false, message: `Invalid status for ${definition.displayName}. Allowed: ${definition.statuses.join(", ")}`, data: null }
-      );
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `Invalid status for ${definition.displayName}. Allowed: ${definition.statuses.join(", ")}`,
+          data: null
+        });
     }
 
     const model = getResourceModel(key);
@@ -130,7 +143,7 @@ resourceRouter.post("/:resource", async (req, res, next) => {
   }
 });
 
-resourceRouter.get("/:resource/stats/summary", async (req, res, next) => {
+resourceRouter.get("/:resource/stats/summary", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const definition = resourceDefinitionMap.get(key)!;
@@ -150,7 +163,7 @@ resourceRouter.get("/:resource/stats/summary", async (req, res, next) => {
   }
 });
 
-resourceRouter.get("/:resource/:id", async (req, res, next) => {
+resourceRouter.get("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const model = getResourceModel(key);
@@ -166,20 +179,27 @@ resourceRouter.get("/:resource/:id", async (req, res, next) => {
   }
 });
 
-resourceRouter.patch("/:resource/:id", async (req, res, next) => {
+resourceRouter.patch("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const definition = resourceDefinitionMap.get(key)!;
     const payload = updatePayloadSchema.parse(req.body);
 
     if (payload.status && !definition.statuses.includes(payload.status)) {
-      return res.status(400).json(
-        { success: false, message: `Invalid status for ${definition.displayName}. Allowed: ${definition.statuses.join(", ")}`, data: null }
-      );
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: `Invalid status for ${definition.displayName}. Allowed: ${definition.statuses.join(", ")}`,
+          data: null
+        });
     }
 
     const model = getResourceModel(key);
-    const item = await model.findByIdAndUpdate(req.params.id, payload, { new: true, runValidators: true });
+    const item = await model.findByIdAndUpdate(req.params.id, payload, {
+      new: true,
+      runValidators: true
+    });
 
     if (!item) {
       return res.status(404).json({ success: false, message: "Record not found", data: null });
@@ -191,7 +211,7 @@ resourceRouter.patch("/:resource/:id", async (req, res, next) => {
   }
 });
 
-resourceRouter.delete("/:resource/:id", async (req, res, next) => {
+resourceRouter.delete("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
     const key = parseResourceKey(req.params.resource);
     const model = getResourceModel(key);

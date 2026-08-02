@@ -10,13 +10,16 @@ interface LaboratoryTableProps {
   onProcess?: (id: string) => void;
 
   onEnterResult?: (id: string) => void;
+
+  onViewDetails?: (id: string) => void;
 }
 
 export function LaboratoryTable({
   laboratories,
   onCollectSample,
   onProcess,
-  onEnterResult
+  onEnterResult,
+  onViewDetails
 }: LaboratoryTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border">
@@ -59,7 +62,16 @@ export function LaboratoryTable({
               <td className="px-4 py-3">{new Date(lab.requestedAt).toLocaleDateString()}</td>
 
               <td className="px-4 py-3">
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                  {onViewDetails && (
+                    <button
+                      onClick={() => onViewDetails(lab._id)}
+                      className="rounded-md border border-slate-200 bg-white px-3 py-1 text-xs text-slate-700"
+                    >
+                      Details
+                    </button>
+                  )}
+
                   {lab.status === "requested" && onCollectSample && (
                     <button
                       onClick={() => onCollectSample(lab._id)}

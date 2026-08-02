@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 import { LaboratoryTable } from "@/components/laboratory/LaboratoryTable";
 
 import { useLaboratoryQueue, useUpdateLaboratoryStatus } from "@/hooks/use-laboratory";
 
 export default function LaboratoryQueuePage() {
+  const navigate = useNavigate();
   const { data: laboratories, isLoading, isError } = useLaboratoryQueue();
 
   const updateStatus = useUpdateLaboratoryStatus();
@@ -28,7 +31,7 @@ export default function LaboratoryQueuePage() {
   };
 
   const handleEnterResult = (id: string) => {
-    console.log("Open result page:", id);
+    navigate(`result/${id}`);
   };
 
   if (isLoading) {
@@ -57,6 +60,8 @@ export default function LaboratoryQueuePage() {
         onProcess={handleProcess}
 
         onEnterResult={handleEnterResult}
+
+        onViewDetails={(id) => navigate(id)}
       />
     </div>
   );

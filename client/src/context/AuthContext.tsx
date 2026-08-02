@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, type ReactNode } from "react";
+import { createContext, useContext, useMemo, useEffect, useState, type ReactNode } from "react";
 
 import type { LoginInput, RegisterInput } from "@hms/contracts";
 
@@ -13,44 +13,69 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const session = authClient.useSession();
+  const [userState, setUserState] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  async function fetchSession() {
+    setLoading(true);
+    try {
+      const resp = await authService.getCurrentUser();
+
+      // authClient.getSession() returns { data, error } shape or similar
+      if (resp?.data?.user) {
+        setUserState(resp.data.user);
+      } else if (resp?.user) {
+        setUserState(resp.user);
+      } else {
+        setUserState(null);
+      }
+    } catch (err) {
+      // network or server error; treat as no session
+      // console.warn(err);
+      setUserState(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    void fetchSession();
+  }, []);
 
   async function login(data: LoginInput) {
     await authService.login(data);
-    await session.refetch();
+    await fetchSession();
   }
 
   async function register(data: RegisterInput) {
     await authService.register(data);
-    await session.refetch();
+    await fetchSession();
   }
 
   async function logout() {
     await authService.logout();
-    await session.refetch();
+    await fetchSession();
   }
 
   const user = useMemo(() => {
-    const sessionUser = session.data?.user;
+    const sessionUser = userState;
 
-    if (!sessionUser) {
-      return null;
-    }
+    if (!sessionUser) return null;
 
     return {
       id: sessionUser.id,
       name: sessionUser.name,
       email: sessionUser.email,
-      role: "patient" as const,
+      role: sessionUser.role,
       image: sessionUser.image ?? undefined
     };
-  }, [session.data?.user]);
+  }, [userState]);
 
   return (
     <AuthContext.Provider
       value={{
         user,
-        loading: session.isPending,
+        loading,
         login,
         register,
         logout

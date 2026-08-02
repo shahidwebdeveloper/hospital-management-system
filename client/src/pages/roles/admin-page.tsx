@@ -13,8 +13,8 @@ export default function AdminPage() {
         "Governance controls for enterprise readiness"
       ]}
       actions={[
-        { label: "Go to dashboard", href: "/dashboard" },
-        { label: "Manage users", href: "/users", variant: "outline" }
+        { label: "Go to dashboard", href: "/app/dashboard" },
+        { label: "Manage users", href: "/app/users/manage", variant: "outline" }
       ]}
     >
       <div className="space-y-3">

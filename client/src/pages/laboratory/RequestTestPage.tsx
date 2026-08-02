@@ -1,12 +1,24 @@
 import { RequestTestForm } from "@/components/laboratory/RequestTestForm";
 import { usePatients } from "@/hooks/use-patients";
+import { useAuth } from "@/context/AuthContext";
 
-interface RequestTestPageProps {
-  doctorId: string;
-}
-
-export default function RequestTestPage({ doctorId }: RequestTestPageProps) {
+export default function RequestTestPage() {
+  const { user } = useAuth();
   const { data: patients, isLoading, isError } = usePatients();
+
+  if (!user) {
+    return (
+      <div className="p-6 text-red-500">You must be signed in to request a laboratory test.</div>
+    );
+  }
+
+  if (user.role !== "doctor") {
+    return (
+      <div className="p-6 text-red-500">
+        Laboratory test requests can only be created by users with the doctor role.
+      </div>
+    );
+  }
 
   if (isLoading) {
     return <div className="p-6">Loading patients...</div>;
@@ -25,7 +37,7 @@ export default function RequestTestPage({ doctorId }: RequestTestPageProps) {
       </div>
 
       <RequestTestForm
-        doctorId={doctorId}
+        doctorId={user.id}
 
         patients={
           patients?.map((patient) => ({

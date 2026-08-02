@@ -12,6 +12,8 @@ import { useMemo, useState } from "react";
 import { hospitalRules, moduleDefinitions, roleLabels } from "@hms/contracts";
 import type { HospitalModule } from "@hms/contracts";
 
+import { useAuth } from "@/context/AuthContext";
+
 import { Button } from "@/components/ui/button";
 import { moduleRecords, priorityTone, statusTone } from "@/data/hospital-data";
 
@@ -28,6 +30,7 @@ function labelStatus(status: string) {
 
 export default function ModulePage({ moduleKey }: ModulePageProps) {
   const definition = moduleDefinitions.find((item) => item.key === moduleKey);
+  const { user } = useAuth();
   const records = moduleRecords[moduleKey] ?? [];
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("all");
@@ -36,7 +39,14 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
     const normalized = search.trim().toLowerCase();
     return records.filter((record) => {
       const matchesSearch = normalized
-        ? [record.id, record.title, record.subtitle, record.owner, record.status, ...Object.values(record.details)]
+        ? [
+            record.id,
+            record.title,
+            record.subtitle,
+            record.owner,
+            record.status,
+            ...Object.values(record.details)
+          ]
             .join(" ")
             .toLowerCase()
             .includes(normalized)
@@ -50,8 +60,16 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
     return <main className="p-5">Module not found.</main>;
   }
 
-  const urgentCount = records.filter((record) => record.priority === "urgent" || record.priority === "high").length;
-  const activeCount = records.filter((record) => !["inactive", "cancelled", "archived"].includes(record.status)).length;
+  if (user && !definition.allowedRoles.includes(user.role)) {
+    return <main className="p-5">You do not have permission to view this module.</main>;
+  }
+
+  const urgentCount = records.filter(
+    (record) => record.priority === "urgent" || record.priority === "high"
+  ).length;
+  const activeCount = records.filter(
+    (record) => !["inactive", "cancelled", "archived"].includes(record.status)
+  ).length;
 
   return (
     <main className="space-y-6 p-5">
@@ -114,7 +132,9 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
         >
           <option value="all">All statuses</option>
           {definition.statuses.map((item) => (
-            <option key={item} value={item}>{labelStatus(item)}</option>
+            <option key={item} value={item}>
+              {labelStatus(item)}
+            </option>
           ))}
         </select>
       </section>
@@ -124,18 +144,33 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
           <div className="grid grid-cols-[1fr_auto] gap-3 border-b p-4">
             <div>
               <h2 className="font-semibold">Records</h2>
-              <p className="text-sm text-muted-foreground">Searchable, status-filtered operational list.</p>
+              <p className="text-sm text-muted-foreground">
+                Searchable, status-filtered operational list.
+              </p>
             </div>
-            <span className="self-start rounded-md bg-secondary px-2 py-1 text-xs font-semibold">{visibleRecords.length} shown</span>
+            <span className="self-start rounded-md bg-secondary px-2 py-1 text-xs font-semibold">
+              {visibleRecords.length} shown
+            </span>
           </div>
           <div className="divide-y">
             {visibleRecords.map((record) => (
-              <article key={record.id} className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-start">
+              <article
+                key={record.id}
+                className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-start"
+              >
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <h3 className="font-semibold">{record.title}</h3>
-                    <span className={`rounded-md border px-2 py-1 text-xs font-semibold ${statusTone(record.status)}`}>{labelStatus(record.status)}</span>
-                    <span className={`rounded-md px-2 py-1 text-xs font-semibold ${priorityTone(record.priority)}`}>{record.priority}</span>
+                    <span
+                      className={`rounded-md border px-2 py-1 text-xs font-semibold ${statusTone(record.status)}`}
+                    >
+                      {labelStatus(record.status)}
+                    </span>
+                    <span
+                      className={`rounded-md px-2 py-1 text-xs font-semibold ${priorityTone(record.priority)}`}
+                    >
+                      {record.priority}
+                    </span>
                   </div>
                   <p className="mt-1 text-sm text-muted-foreground">{record.subtitle}</p>
                   <div className="mt-3 grid gap-2 sm:grid-cols-3">
@@ -148,7 +183,9 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
                   </div>
                 </div>
                 <div className="flex flex-row gap-2 lg:flex-col lg:items-end">
-                  <span className="rounded-md border bg-background px-3 py-2 text-sm font-semibold">{record.metric}</span>
+                  <span className="rounded-md border bg-background px-3 py-2 text-sm font-semibold">
+                    {record.metric}
+                  </span>
                   <Button variant="outline" size="sm">
                     <SquarePen className="h-4 w-4" />
                     Edit
@@ -164,7 +201,10 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
             <h2 className="font-semibold">Allowed Roles</h2>
             <div className="mt-3 flex flex-wrap gap-2">
               {definition.allowedRoles.map((role) => (
-                <span key={role} className="rounded-md border bg-background px-2 py-1 text-xs font-semibold">
+                <span
+                  key={role}
+                  className="rounded-md border bg-background px-2 py-1 text-xs font-semibold"
+                >
                   {roleLabels[role]}
                 </span>
               ))}
@@ -175,7 +215,10 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
             <h2 className="font-semibold">Workflow Statuses</h2>
             <div className="mt-3 grid gap-2">
               {definition.statuses.map((item) => (
-                <span key={item} className={`rounded-md border px-2 py-2 text-xs font-semibold ${statusTone(item)}`}>
+                <span
+                  key={item}
+                  className={`rounded-md border px-2 py-2 text-xs font-semibold ${statusTone(item)}`}
+                >
                   {labelStatus(item)}
                 </span>
               ))}
@@ -187,7 +230,12 @@ export default function ModulePage({ moduleKey }: ModulePageProps) {
               <h2 className="font-semibold">Hospital Rules</h2>
               <div className="mt-3 space-y-2">
                 {hospitalRules.map((rule) => (
-                  <p key={rule} className="rounded-md border bg-background p-3 text-sm text-muted-foreground">{rule}</p>
+                  <p
+                    key={rule}
+                    className="rounded-md border bg-background p-3 text-sm text-muted-foreground"
+                  >
+                    {rule}
+                  </p>
                 ))}
               </div>
             </section>
