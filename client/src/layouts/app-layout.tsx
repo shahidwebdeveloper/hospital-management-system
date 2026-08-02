@@ -114,7 +114,7 @@ export default function AppLayout() {
                     </span>
                   </span>
                 ) : (
-                  "Demo mode"
+                  "Not signed in"
                 )}
               </span>
               {user ? (

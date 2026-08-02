@@ -10,6 +10,7 @@ const envSchema = z.object({
   CLIENT_URL: z.string().url().default("http://localhost:5173"),
   MONGODB_URI: z.string().min(1),
   MONGODB_DB_NAME: z.string().default("hms"),
+  MONGODB_AUTH_DB_NAME: z.string().default("hms_auth"),
   BETTER_AUTH_SECRET: z.string().min(16),
   BETTER_AUTH_URL: z.string().url().default("http://localhost:5000"),
   BCRYPT_SALT_ROUNDS: z.coerce.number().int().min(10).default(12)

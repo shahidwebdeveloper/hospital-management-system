@@ -2,10 +2,10 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 
 import { env } from "../config/env.js";
-import { client, db } from "./database.js";
+import { authDb, client } from "./database.js";
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, {
+  database: mongodbAdapter(authDb, {
     client
   }),
 

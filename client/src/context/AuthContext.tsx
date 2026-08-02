@@ -54,7 +54,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function logout() {
     await authService.logout();
+    setUserState(null);
     await fetchSession();
+    window.location.assign("/");
   }
 
   const user = useMemo(() => {
