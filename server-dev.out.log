@@ -1,0 +1,23 @@
+
+> hospital-management-system@0.1.0 dev:server
+> npm run dev --workspace @hms/server
+
+
+> @hms/server@0.1.0 dev
+> tsx watch src/server.ts
+
+MongoDB connected
+HMS API running on http://localhost:5000/api/v1
+[0mPOST /api/v1/patients [32m201[0m 176.401 ms - 527[0m
+[0mGET /api/v1/patients?search=0700435720 [32m200[0m 27.008 ms - 487[0m
+[0mGET /api/v1/patients/6a730f887b93a9ce3399a4b4 [32m200[0m 14.545 ms - 485[0m
+[0mPATCH /api/v1/patients/6a730f887b93a9ce3399a4b4 [32m200[0m 27.215 ms - 533[0m
+[0mDELETE /api/v1/patients/6a730f887b93a9ce3399a4b4 [32m200[0m 12.490 ms - 58[0m
+3:00:48 PM [tsx] change in ./src\modules\doctors\doctor-controller.ts Restarting...
+MongoDB connected
+HMS API running on http://localhost:5000/api/v1
+[0mPOST /api/v1/doctors [32m201[0m 122.062 ms - 452[0m
+[0mGET /api/v1/doctors?search=LIC-CODEX-163628 [32m200[0m 29.966 ms - 413[0m
+[0mGET /api/v1/doctors/6a731158d1fa5bedd09d5f0c [32m200[0m 17.209 ms - 411[0m
+[0mPATCH /api/v1/doctors/6a731158d1fa5bedd09d5f0c [32m200[0m 31.716 ms - 448[0m
+[0mDELETE /api/v1/doctors/6a731158d1fa5bedd09d5f0c [32m200[0m 17.710 ms - 57[0m

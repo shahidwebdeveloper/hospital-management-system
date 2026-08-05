@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { deleteDoctor, getDoctors } from "@/services/doctor-services";
@@ -6,7 +7,12 @@ import type { Doctor } from "@/services/doctor-services";
 
 export default function DoctorListPage() {
   const queryClient = useQueryClient();
-  const { data, isLoading, isError } = useQuery({ queryKey: ["doctors"], queryFn: getDoctors });
+  const [search, setSearch] = useState("");
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["doctors", search],
+    queryFn: () => getDoctors(search)
+  });
 
   const deleteMutation = useMutation({
     mutationFn: deleteDoctor,
@@ -35,6 +41,14 @@ export default function DoctorListPage() {
         </Link>
       </div>
 
+      <input
+        type="text"
+        placeholder="Search by name, phone, email, specialization, department, license, or status..."
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+        className="mb-4 w-full rounded border p-2"
+      />
+
       {doctors.length === 0 ? (
         <div>No doctors found.</div>
       ) : (
@@ -59,16 +73,10 @@ export default function DoctorListPage() {
                 <td className="border p-2">{doctor.status}</td>
                 <td className="border p-2">
                   <div className="flex gap-2">
-                    <Link
-                      to={`/app/doctors/${doctor._id}`}
-                      className="rounded bg-green-600 px-3 py-1 text-white"
-                    >
+                    <Link to={`/app/doctors/${doctor._id}`} className="rounded bg-green-600 px-3 py-1 text-white">
                       View
                     </Link>
-                    <Link
-                      to={`/app/doctors/${doctor._id}/edit`}
-                      className="rounded bg-yellow-500 px-3 py-1 text-white"
-                    >
+                    <Link to={`/app/doctors/${doctor._id}/edit`} className="rounded bg-yellow-500 px-3 py-1 text-white">
                       Edit
                     </Link>
                     <button

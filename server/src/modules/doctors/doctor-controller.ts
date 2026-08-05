@@ -19,9 +19,10 @@ export class DoctorController {
     }
   }
 
-  static async getDoctors(_req: Request, res: Response) {
+  static async getDoctors(req: Request, res: Response) {
     try {
-      const doctors = await DoctorService.getDoctors();
+      const search = typeof req.query.search === "string" ? req.query.search : "";
+      const doctors = await DoctorService.getDoctors(search);
       return res.status(200).json({ success: true, data: doctors });
     } catch (error) {
       return res.status(500).json({ success: false, message: "Failed to fetch doctors.", error });

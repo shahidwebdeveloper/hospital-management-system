@@ -23,8 +23,10 @@ export interface ApiResponse<T> {
 
 const BASE_URL = "/doctors";
 
-export const getDoctors = async (): Promise<ApiResponse<Doctor[]>> => {
-  const response = await apiClient.get<ApiResponse<Doctor[]>>(BASE_URL);
+export const getDoctors = async (search = ""): Promise<ApiResponse<Doctor[]>> => {
+  const response = await apiClient.get<ApiResponse<Doctor[]>>(BASE_URL, {
+    params: search ? { search } : undefined
+  });
   return response.data;
 };
 

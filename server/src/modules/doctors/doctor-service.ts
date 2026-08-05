@@ -10,8 +10,23 @@ export class DoctorService {
     return DoctorModel.create(data);
   }
 
-  static async getDoctors() {
-    return DoctorModel.find().sort({ createdAt: -1 });
+  static async getDoctors(search = "") {
+    const normalizedSearch = search.trim();
+    const filters = normalizedSearch
+      ? {
+          $or: [
+            { name: { $regex: normalizedSearch, $options: "i" } },
+            { email: { $regex: normalizedSearch, $options: "i" } },
+            { phone: { $regex: normalizedSearch, $options: "i" } },
+            { specialization: { $regex: normalizedSearch, $options: "i" } },
+            { department: { $regex: normalizedSearch, $options: "i" } },
+            { licenseNumber: { $regex: normalizedSearch, $options: "i" } },
+            { status: { $regex: normalizedSearch, $options: "i" } }
+          ]
+        }
+      : {};
+
+    return DoctorModel.find(filters).sort({ createdAt: -1 });
   }
 
   static async getDoctorById(id: string) {
