@@ -21,7 +21,7 @@ function buildLineItems(items: Array<Partial<CreateInvoiceInput["items"][number]
   });
 }
 
-function getDefaultStatus(status: InvoiceStatus, totalAmount: number, paidAmount: number) {
+function getDefaultStatus(status: InvoiceStatus | undefined, totalAmount: number, paidAmount: number) {
   if (status && status !== "draft") {
     return status;
   }

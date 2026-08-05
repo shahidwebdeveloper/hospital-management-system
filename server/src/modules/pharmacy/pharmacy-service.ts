@@ -21,26 +21,30 @@ function getMedicineStatus(stock: number, expiryDate: Date, reorderLevel: number
   return "in_stock";
 }
 
-function normalizeMedicineInput(data: CreateMedicineInput | UpdateMedicineInput) {
-  const normalized: Partial<CreateMedicineInput> = {
+type NormalizedMedicineInput = Omit<Partial<CreateMedicineInput>, "expiryDate"> & {
+  expiryDate?: Date;
+};
+
+function normalizeMedicineInput(data: CreateMedicineInput | UpdateMedicineInput): NormalizedMedicineInput {
+  return {
     ...data,
     expiryDate: data.expiryDate ? new Date(data.expiryDate) : undefined
   };
-
-  return normalized;
 }
 
 export class PharmacyService {
   static async createMedicine(data: CreateMedicineInput) {
     const normalized = normalizeMedicineInput(data);
-    const status = getMedicineStatus(
-      normalized.stock,
-      normalized.expiryDate as Date,
-      normalized.reorderLevel
-    );
+    const stock = normalized.stock ?? 0;
+    const expiryDate = normalized.expiryDate ?? new Date(data.expiryDate);
+    const reorderLevel = normalized.reorderLevel ?? 0;
+    const status = getMedicineStatus(stock, expiryDate, reorderLevel);
 
     return await Medicine.create({
       ...normalized,
+      stock,
+      expiryDate,
+      reorderLevel,
       status,
       lastRestockedAt: new Date()
     });
@@ -73,7 +77,7 @@ export class PharmacyService {
     const stock = normalized.stock ?? existing.stock;
     const expiryDate = normalized.expiryDate ?? existing.expiryDate;
     const reorderLevel = normalized.reorderLevel ?? existing.reorderLevel;
-    const status = getMedicineStatus(stock, expiryDate as Date, reorderLevel);
+    const status = getMedicineStatus(stock, expiryDate, reorderLevel);
 
     return await Medicine.findByIdAndUpdate(
       id,

@@ -28,16 +28,16 @@ export function InvoiceForm({ initialValues, invoiceId, onSuccess }: InvoiceForm
   const updateMutation = useUpdateInvoice();
 
   const { data: patientResponse } = usePatients();
-  const patients = patientResponse?.data ?? [];
+  const patients = patientResponse ?? [];
 
   const { data: appointmentResponse } = useAppointments();
   const appointments = appointmentResponse?.data ?? [];
 
   const { data: laboratoryResponse } = useLaboratoryRequests();
-  const laboratoryRequests = laboratoryResponse?.data ?? [];
+  const laboratoryRequests = laboratoryResponse ?? [];
 
   const { data: medicineResponse } = useMedicines();
-  const medicines = medicineResponse?.data ?? [];
+  const medicines = medicineResponse ?? [];
 
   const [selectedAppointmentId, setSelectedAppointmentId] = useState("");
   const [selectedLaboratoryId, setSelectedLaboratoryId] = useState("");

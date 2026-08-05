@@ -1,23 +1,21 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { deletePatient, getPatients } from "@/services/patient-services";
-
 import type { Patient } from "@/services/patient-services";
 
 export default function PatientListPage() {
   const queryClient = useQueryClient();
+  const [search, setSearch] = useState("");
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["patients"],
-
-    queryFn: getPatients
+    queryKey: ["patients", search],
+    queryFn: () => getPatients(search)
   });
 
   const deleteMutation = useMutation({
     mutationFn: deletePatient,
-
     onSuccess: async () => {
       await queryClient.invalidateQueries({
         queryKey: ["patients"]
@@ -48,20 +46,16 @@ export default function PatientListPage() {
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">Patients</h1>
 
-        <Link
-          to="/app/patients/new"
-
-          className="rounded bg-blue-600 px-4 py-2 text-white"
-        >
+        <Link to="/app/patients/new" className="rounded bg-blue-600 px-4 py-2 text-white">
           Add Patient
         </Link>
       </div>
 
       <input
         type="text"
-
-        placeholder="Search patients..."
-
+        placeholder="Search by name, phone, email, blood group, or status..."
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
         className="mb-4 w-full rounded border p-2"
       />
 
@@ -72,15 +66,10 @@ export default function PatientListPage() {
           <thead>
             <tr className="bg-gray-100">
               <th className="border p-2">Name</th>
-
               <th className="border p-2">Phone</th>
-
               <th className="border p-2">Gender</th>
-
               <th className="border p-2">Blood Group</th>
-
               <th className="border p-2">Status</th>
-
               <th className="border p-2">Actions</th>
             </tr>
           </thead>
@@ -89,38 +78,21 @@ export default function PatientListPage() {
             {patients.map((patient: Patient) => (
               <tr key={patient._id}>
                 <td className="border p-2">{patient.name}</td>
-
                 <td className="border p-2">{patient.phone}</td>
-
                 <td className="border p-2">{patient.gender}</td>
-
                 <td className="border p-2">{patient.bloodGroup || "-"}</td>
-
                 <td className="border p-2">{patient.status}</td>
-
                 <td className="border p-2">
                   <div className="flex gap-2">
-                    <Link
-                      to={`/app/patients/${patient._id}`}
-
-                      className="rounded bg-green-600 px-3 py-1 text-white"
-                    >
+                    <Link to={`/app/patients/${patient._id}`} className="rounded bg-green-600 px-3 py-1 text-white">
                       View
                     </Link>
-
-                    <Link
-                      to={`/app/patients/${patient._id}/edit`}
-
-                      className="rounded bg-yellow-500 px-3 py-1 text-white"
-                    >
+                    <Link to={`/app/patients/${patient._id}/edit`} className="rounded bg-yellow-500 px-3 py-1 text-white">
                       Edit
                     </Link>
-
                     <button
                       onClick={() => handleDelete(patient._id!)}
-
                       disabled={deleteMutation.isPending}
-
                       className="rounded bg-red-600 px-3 py-1 text-white"
                     >
                       {deleteMutation.isPending ? "Deleting..." : "Delete"}

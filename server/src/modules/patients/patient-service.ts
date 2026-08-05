@@ -17,8 +17,21 @@ export class PatientService {
   /**
    * Get all patients
    */
-  static async getPatients() {
-    const patients = await PatientModel.find().sort({
+  static async getPatients(search = "") {
+    const normalizedSearch = search.trim();
+    const filters = normalizedSearch
+      ? {
+          $or: [
+            { name: { $regex: normalizedSearch, $options: "i" } },
+            { phone: { $regex: normalizedSearch, $options: "i" } },
+            { email: { $regex: normalizedSearch, $options: "i" } },
+            { bloodGroup: { $regex: normalizedSearch, $options: "i" } },
+            { status: { $regex: normalizedSearch, $options: "i" } }
+          ]
+        }
+      : {};
+
+    const patients = await PatientModel.find(filters).sort({
       createdAt: -1
     });
 

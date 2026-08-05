@@ -52,7 +52,7 @@ export class LaboratoryController {
 
   static async getRequestById(req: Request, res: Response, next: NextFunction) {
     try {
-      const laboratory = await LaboratoryService.getRequestById(req.params.id);
+      const laboratory = await LaboratoryService.getRequestById(String(req.params.id ?? ""));
 
       if (!laboratory) {
         return res.status(404).json({
@@ -74,7 +74,7 @@ export class LaboratoryController {
     try {
       const data = updateLaboratoryStatusSchema.parse(req.body);
 
-      const laboratory = await LaboratoryService.updateStatus(req.params.id, data);
+      const laboratory = await LaboratoryService.updateStatus(String(req.params.id ?? ""), data);
 
       if (!laboratory) {
         return res.status(404).json({
@@ -97,7 +97,7 @@ export class LaboratoryController {
     try {
       const data = laboratoryResultSchema.parse(req.body);
 
-      const laboratory = await LaboratoryService.enterResult(req.params.id, data);
+      const laboratory = await LaboratoryService.enterResult(String(req.params.id ?? ""), data);
 
       if (!laboratory) {
         return res.status(404).json({
@@ -118,7 +118,7 @@ export class LaboratoryController {
 
   static async cancelRequest(req: Request, res: Response, next: NextFunction) {
     try {
-      const laboratory = await LaboratoryService.cancelRequest(req.params.id);
+      const laboratory = await LaboratoryService.cancelRequest(String(req.params.id ?? ""));
 
       if (!laboratory) {
         return res.status(404).json({
@@ -139,7 +139,7 @@ export class LaboratoryController {
 
   static async deleteRequest(req: Request, res: Response, next: NextFunction) {
     try {
-      const laboratory = await LaboratoryService.deleteRequest(req.params.id);
+      const laboratory = await LaboratoryService.deleteRequest(String(req.params.id ?? ""));
 
       if (!laboratory) {
         return res.status(404).json({

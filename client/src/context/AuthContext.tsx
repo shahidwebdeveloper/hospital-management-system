@@ -19,7 +19,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function fetchSession() {
     setLoading(true);
     try {
-      const resp = await authService.getCurrentUser();
+      const resp = (await authService.getCurrentUser()) as any;
 
       // authClient.getSession() returns { data, error } shape or similar
       if (resp?.data?.user) {

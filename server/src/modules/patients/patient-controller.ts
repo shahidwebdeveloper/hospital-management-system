@@ -37,9 +37,10 @@ export class PatientController {
   /**
    * Get All Patients
    */
-  static async getPatients(_req: Request, res: Response) {
+  static async getPatients(req: Request, res: Response) {
     try {
-      const patients = await PatientService.getPatients();
+      const search = typeof req.query.search === "string" ? req.query.search : "";
+      const patients = await PatientService.getPatients(search);
 
       return res.status(200).json({
         success: true,

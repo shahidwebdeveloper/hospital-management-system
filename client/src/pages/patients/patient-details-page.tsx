@@ -48,7 +48,7 @@ export default function PatientDetailsPage() {
         </h1>
 
         <Link
-          to={`/patients/${patient._id}/edit`}
+          to={`/app/patients/${patient._id}/edit`}
           className="bg-yellow-500 text-white px-4 py-2 rounded"
         >
           Edit Patient

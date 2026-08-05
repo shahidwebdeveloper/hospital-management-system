@@ -17,7 +17,7 @@ import {
 import { NavLink, Outlet } from "react-router-dom";
 
 import { moduleDefinitions, roleLabels } from "@hms/contracts";
-import type { HospitalModule } from "@hms/contracts";
+import type { AppRole, HospitalModule } from "@hms/contracts";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
@@ -53,9 +53,9 @@ export default function AppLayout() {
 
   const visibleNav = navItemsBase.filter((item) => {
     if (item.key === "dashboard") return true;
-    const role = (user as any)?.role;
+    const role = user?.role as AppRole | undefined;
     if (!role) return true;
-    return (item as any).allowedRoles?.includes(role) ?? true;
+    return "allowedRoles" in item ? item.allowedRoles.includes(role) : true;
   });
 
   return (
@@ -110,7 +110,7 @@ export default function AppLayout() {
                   <span>
                     <span className="font-medium">{user.name}</span>
                     <span className="ml-2 text-sm text-muted-foreground">
-                      {roleLabels[user.role as any]}
+                      {roleLabels[user.role as AppRole]}
                     </span>
                   </span>
                 ) : (

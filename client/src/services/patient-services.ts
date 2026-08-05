@@ -43,12 +43,10 @@ const BASE_URL = "/patients";
 /**
  * Get all patients
  */
-export const getPatients = async (): Promise<
-  ApiResponse<Patient[]>
-> => {
-  const response = await apiClient.get<
-    ApiResponse<Patient[]>
-  >(BASE_URL);
+export const getPatients = async (search = ""): Promise<ApiResponse<Patient[]>> => {
+  const response = await apiClient.get<ApiResponse<Patient[]>>(BASE_URL, {
+    params: search ? { search } : undefined
+  });
 
   return response.data;
 };

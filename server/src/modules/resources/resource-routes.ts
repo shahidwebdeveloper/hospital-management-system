@@ -66,7 +66,7 @@ resourceRouter.get("/rules", (_req, res) => {
 
 resourceRouter.get("/:resource", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const definition = resourceDefinitionMap.get(key)!;
     const model = getResourceModel(key);
     const page = Math.max(Number(req.query.page ?? 1), 1);
@@ -120,7 +120,7 @@ resourceRouter.get("/:resource", authorizeResource(), async (req, res, next) => 
 
 resourceRouter.post("/:resource", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const definition = resourceDefinitionMap.get(key)!;
     const payload = resourcePayloadSchema.parse(req.body);
 
@@ -145,7 +145,7 @@ resourceRouter.post("/:resource", authorizeResource(), async (req, res, next) =>
 
 resourceRouter.get("/:resource/stats/summary", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const definition = resourceDefinitionMap.get(key)!;
     const model = getResourceModel(key);
     const byStatus = await model.aggregate([{ $group: { _id: "$status", count: { $sum: 1 } } }]);
@@ -165,7 +165,7 @@ resourceRouter.get("/:resource/stats/summary", authorizeResource(), async (req, 
 
 resourceRouter.get("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const model = getResourceModel(key);
     const item = await model.findById(req.params.id).lean();
 
@@ -181,7 +181,7 @@ resourceRouter.get("/:resource/:id", authorizeResource(), async (req, res, next)
 
 resourceRouter.patch("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const definition = resourceDefinitionMap.get(key)!;
     const payload = updatePayloadSchema.parse(req.body);
 
@@ -213,7 +213,7 @@ resourceRouter.patch("/:resource/:id", authorizeResource(), async (req, res, nex
 
 resourceRouter.delete("/:resource/:id", authorizeResource(), async (req, res, next) => {
   try {
-    const key = parseResourceKey(req.params.resource);
+    const key = parseResourceKey(String(req.params.resource ?? ""));
     const model = getResourceModel(key);
     const item = await model.findByIdAndDelete(req.params.id);
 
