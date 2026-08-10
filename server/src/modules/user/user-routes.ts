@@ -1,38 +1,41 @@
 import { Router } from "express";
-import { User } from "./user-model.js";
+
+import { UserController } from "./user-controller.js";
 import { authorize } from "../../middlewares/authorize.js";
+import { validateRequest } from "../../middlewares/validate-request.js";
+import { createUserSchema, updateUserSchema, userIdSchema } from "./user-validation.js";
 
 export const userRouter = Router();
 
-// List users (admin-only)
-userRouter.get("/", authorize(["super_admin", "admin"]), async (req, res, next) => {
-  try {
-    const users = await User.find({}, { password: 0 }).lean();
-    res.json({ users });
-  } catch (err) {
-    next(err);
-  }
-});
+userRouter.post(
+  "/",
+  authorize(["super_admin", "admin"]),
+  validateRequest(createUserSchema),
+  (req, res, next) => UserController.createUser(req, res, next)
+);
 
-// Update user (role changes) - admin-only
-userRouter.put("/:id", authorize(["super_admin", "admin"]), async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { role } = req.body;
+userRouter.get("/", authorize(["super_admin", "admin"]), (req, res, next) =>
+  UserController.getUsers(req, res, next)
+);
 
-    if (!role) return res.status(400).json({ message: "role is required" });
+userRouter.get(
+  "/:id",
+  authorize(["super_admin", "admin"]),
+  validateRequest(userIdSchema),
+  (req, res, next) => UserController.getUserById(req, res, next)
+);
 
-    const user = await User.findById(id);
-    if (!user) return res.status(404).json({ message: "User not found" });
+userRouter.patch(
+  "/:id",
+  authorize(["super_admin", "admin"]),
+  validateRequest(userIdSchema),
+  validateRequest(updateUserSchema),
+  (req, res, next) => UserController.updateUser(req, res, next)
+);
 
-    user.role = role;
-    await user.save();
-
-    const out = user.toObject();
-    delete (out as any).password;
-
-    res.json({ user: out });
-  } catch (err) {
-    next(err);
-  }
-});
+userRouter.delete(
+  "/:id",
+  authorize(["super_admin", "admin"]),
+  validateRequest(userIdSchema),
+  (req, res, next) => UserController.deleteUser(req, res, next)
+);

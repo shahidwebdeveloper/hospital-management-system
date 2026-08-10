@@ -6,6 +6,7 @@ import LandingPage from "./pages/landing-page";
 import ModulePage from "@/pages/modules/module-page";
 import Login from "./pages/signin-page";
 import Register from "./pages/signup-page";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 import AppointmentFormPage from "@/pages/appointments/appointment-form-page";
 import AppointmentListPage from "@/pages/appointments/appointment-list-page";
@@ -55,7 +56,11 @@ export const router = createBrowserRouter([
 
   {
     path: "/app",
-    element: <AppLayout />,
+    element: (
+      <ProtectedRoute>
+        <AppLayout />
+      </ProtectedRoute>
+    ),
     errorElement: <ErrorPage />,
 
     children: [
