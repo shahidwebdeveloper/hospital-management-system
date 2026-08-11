@@ -4,11 +4,17 @@ import { userRoleSchema } from "../../constants/roles.js";
 
 export const createUserSchema = z.object({
   name: z.string().trim().min(2, "Name is required"),
+
   email: z.string().email("Please provide a valid email address"),
+
   password: z.string().min(8, "Password must be at least 8 characters"),
+
   phone: z.string().trim().optional(),
+
   role: userRoleSchema.default("patient"),
+
   isActive: z.boolean().default(true),
+
   isVerified: z.boolean().default(false)
 });
 

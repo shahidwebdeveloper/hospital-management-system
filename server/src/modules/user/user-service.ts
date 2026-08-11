@@ -18,9 +18,13 @@ export class UserService {
       isVerified: data.isVerified ?? false
     });
 
-    const out = user.toObject();
-    delete (out as any).password;
-    return out;
+    const userObject = user.toObject();
+
+    const userWithoutPassword = Object.fromEntries(
+      Object.entries(userObject).filter(([key]) => key !== "password")
+    );
+
+    return userWithoutPassword;
   }
 
   static async getUsers() {

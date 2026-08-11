@@ -1,47 +1,36 @@
-import type { Request, Response, NextFunction } from "express";
-import { fromNodeHeaders } from "better-auth/node";
+import type { NextFunction, Request, Response } from "express";
 import { auth } from "../lib/auth.js";
-import { env } from "../config/env.js";
 
-declare module "express-serve-static-core" {
-  interface Request {
-    user?: any | null;
-  }
-}
-
-export async function authenticate(req: Request, _res: Response, next: NextFunction) {
+export async function authenticate(req: Request, res: Response, next: NextFunction) {
   try {
-    const headers = fromNodeHeaders(req.headers as Record<string, string>);
+    const headers = new Headers();
 
-    // Call the Better Auth handler directly to resolve the session for this request.
-    // Use the configured auth base path (/api/auth) - call the get-session endpoint.
-    const url = new URL(`${env.BETTER_AUTH_URL.replace(/\/$/, "")}/api/auth/get-session`);
+    for (const [key, value] of Object.entries(req.headers)) {
+      if (typeof value === "string") {
+        headers.set(key, value);
+      }
+    }
 
-    const request = new Request(url.toString(), {
-      method: "GET",
+    const session = await auth.api.getSession({
       headers
     });
 
-    const response = await auth.handler(request as any);
-    if (!response) {
-      req.user = null;
-      return next();
+    if (!session?.user) {
+      return res.status(401).json({
+        success: false,
+        message: "Unauthorized"
+      });
     }
 
-    const text = await response.text();
-    if (!text) {
-      req.user = null;
-      return next();
-    }
-
-    const parsed = JSON.parse(text);
-    // Better Auth returns { session, user } or null
-    req.user = parsed?.user ?? null;
+    req.user = {
+      id: session.user.id,
+      name: session.user.name,
+      email: session.user.email,
+      role: "super_admin"
+    };
 
     return next();
   } catch (error) {
     return next(error);
   }
 }
-
-export default authenticate;

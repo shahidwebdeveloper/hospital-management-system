@@ -1,15 +1,18 @@
 import { Schema, model } from "mongoose";
 import type { Document } from "mongoose";
 
-export enum UserRole {
-  ADMIN = "Admin",
-  DOCTOR = "Doctor",
-  NURSE = "Nurse",
-  RECEPTIONIST = "Receptionist",
-  PATIENT = "Patient",
-  LAB_TECHNICIAN = "LabTechnician",
-  PHARMACIST = "Pharmacist"
-}
+export const userRoles = [
+  "super_admin",
+  "admin",
+  "doctor",
+  "nurse",
+  "receptionist",
+  "pharmacist",
+  "lab_technician",
+  "patient"
+] as const;
+
+export type UserRole = (typeof userRoles)[number];
 
 export interface IUser extends Document {
   name: string;
@@ -50,8 +53,8 @@ const userSchema = new Schema<IUser>(
 
     role: {
       type: String,
-      enum: Object.values(UserRole),
-      default: UserRole.PATIENT
+      enum: userRoles,
+      default: "patient"
     },
 
     isActive: {

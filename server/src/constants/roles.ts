@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export const userRoles = [
   "super_admin",
   "admin",
@@ -10,3 +12,5 @@ export const userRoles = [
 ] as const;
 
 export type UserRole = (typeof userRoles)[number];
+
+export const userRoleSchema = z.enum(userRoles);

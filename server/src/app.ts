@@ -16,6 +16,7 @@ import { apiRouter } from "./routes/index.js";
 export function createApp() {
   const app = express();
 
+  // CORS
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -72,6 +73,7 @@ export function createApp() {
     })
   );
 
+  // API routes
   app.use(`/api/${env.API_VERSION}`, apiRouter);
 
   app.use(notFoundHandler);
