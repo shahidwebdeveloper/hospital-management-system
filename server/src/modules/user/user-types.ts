@@ -21,9 +21,17 @@ export interface CreateUserInput {
 export interface UpdateUserInput {
   name?: string;
   email?: string;
-  password?: string;
   phone?: string;
   role?: UserRole;
   isActive?: boolean;
   isVerified?: boolean;
+
+  /**
+   * Password is accepted by the input type so the frontend
+   * can eventually support password changes, but it must NOT
+   * be written into the HMS User collection.
+   *
+   * Password changes should be handled through Better Auth.
+   */
+  password?: string;
 }

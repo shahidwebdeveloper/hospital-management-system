@@ -15,17 +15,27 @@ export const userRoles = [
 export type UserRole = (typeof userRoles)[number];
 
 export interface IUser extends Document {
+  authUserId: string;
+
   name: string;
   email: string;
-  password: string;
   phone?: string;
+
   role: UserRole;
+
   isActive: boolean;
   isVerified: boolean;
 }
 
 const userSchema = new Schema<IUser>(
   {
+    authUserId: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true
+    },
+
     name: {
       type: String,
       required: true,
@@ -40,21 +50,16 @@ const userSchema = new Schema<IUser>(
       trim: true
     },
 
-    password: {
-      type: String,
-      required: true,
-      minlength: 8,
-      select: false
-    },
-
     phone: {
-      type: String
+      type: String,
+      trim: true
     },
 
     role: {
       type: String,
       enum: userRoles,
-      default: "patient"
+      default: "patient",
+      required: true
     },
 
     isActive: {

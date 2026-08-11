@@ -27,6 +27,15 @@ const emergencyContactSchema = new Schema(
 
 const patientSchema = new Schema(
   {
+    /**
+     * Links the patient profile to the HMS User.
+     */
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      index: true
+    },
+
     name: {
       type: String,
       required: true,

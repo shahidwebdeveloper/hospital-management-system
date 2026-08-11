@@ -11,7 +11,9 @@ import { useAuth } from "@/context/AuthContext";
 export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
+
   const [formError, setFormError] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
@@ -49,32 +51,40 @@ export default function Login() {
       >
         <div className="mb-6">
           <p className="text-sm font-medium text-muted-foreground">HMS secure access</p>
+
           <h1 className="mt-1 text-2xl font-semibold">Sign in</h1>
         </div>
 
         <div className="space-y-4">
+          {/* Email */}
           <label className="block text-sm font-medium">
             Email
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="email"
+              autoComplete="email"
               {...register("email")}
             />
           </label>
+
           {errors.email ? <p className="text-sm text-destructive">{errors.email.message}</p> : null}
 
+          {/* Password */}
           <label className="block text-sm font-medium">
             Password
             <input
               className="mt-2 h-10 w-full rounded-md border bg-background px-3 outline-none focus:ring-2 focus:ring-ring"
               type="password"
+              autoComplete="current-password"
               {...register("password")}
             />
           </label>
+
           {errors.password ? (
             <p className="text-sm text-destructive">{errors.password.message}</p>
           ) : null}
 
+          {/* Server / authentication error */}
           {formError ? (
             <p className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{formError}</p>
           ) : null}
@@ -82,6 +92,7 @@ export default function Login() {
 
         <Button className="mt-6 w-full" type="submit" disabled={isSubmitting}>
           <LogIn className="h-4 w-4" />
+
           {isSubmitting ? "Signing in..." : "Sign in"}
         </Button>
 

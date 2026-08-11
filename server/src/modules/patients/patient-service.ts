@@ -19,14 +19,40 @@ export class PatientService {
    */
   static async getPatients(search = "") {
     const normalizedSearch = search.trim();
+
     const filters = normalizedSearch
       ? {
           $or: [
-            { name: { $regex: normalizedSearch, $options: "i" } },
-            { phone: { $regex: normalizedSearch, $options: "i" } },
-            { email: { $regex: normalizedSearch, $options: "i" } },
-            { bloodGroup: { $regex: normalizedSearch, $options: "i" } },
-            { status: { $regex: normalizedSearch, $options: "i" } }
+            {
+              name: {
+                $regex: normalizedSearch,
+                $options: "i"
+              }
+            },
+            {
+              phone: {
+                $regex: normalizedSearch,
+                $options: "i"
+              }
+            },
+            {
+              email: {
+                $regex: normalizedSearch,
+                $options: "i"
+              }
+            },
+            {
+              bloodGroup: {
+                $regex: normalizedSearch,
+                $options: "i"
+              }
+            },
+            {
+              status: {
+                $regex: normalizedSearch,
+                $options: "i"
+              }
+            }
           ]
         }
       : {};
