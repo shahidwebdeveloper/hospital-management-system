@@ -59,6 +59,44 @@ export class PatientController {
   }
 
   /**
+   * Get Current Patient Profile
+   */
+  static async getCurrentPatient(req: Request, res: Response) {
+    try {
+      if (!req.user?.id) {
+        return res.status(401).json({
+          success: false,
+
+          message: "Unauthorized."
+        });
+      }
+
+      const patient = await PatientService.getPatientByUserId(req.user.id);
+
+      if (!patient) {
+        return res.status(404).json({
+          success: false,
+
+          message: "Patient profile not found for this account."
+        });
+      }
+
+      return res.status(200).json({
+        success: true,
+
+        data: patient
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+
+        message: "Failed to fetch current patient profile.",
+
+        error
+      });
+    }
+  }
+  /**
    * Get Patient By ID
    */
   static async getPatientById(req: Request, res: Response) {
@@ -187,3 +225,4 @@ export class PatientController {
     }
   }
 }
+

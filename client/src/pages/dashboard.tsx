@@ -16,6 +16,7 @@ import { Link } from "react-router-dom";
 import { moduleDefinitions, roleLabels } from "@hms/contracts";
 
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/context/AuthContext";
 import { moduleRecords } from "@/data/hospital-data";
 
 const metrics = [
@@ -91,6 +92,12 @@ const highlights = [
 ];
 
 export default function Dashboard() {
+  const { user } = useAuth();
+
+  if (user?.role === "patient") {
+    return <PatientDashboard name={user.name} />;
+  }
+
   return (
     <main className="space-y-6 bg-[radial-gradient(circle_at_top_left,_rgba(59,130,246,0.08),_transparent_25%)] p-5 lg:p-6">
       <section className="rounded-2xl border border-border/70 bg-card p-6 shadow-sm">
@@ -246,3 +253,72 @@ export default function Dashboard() {
     </main>
   );
 }
+function PatientDashboard({ name }: { name: string }) {
+  const patientCards = [
+    { label: "My Appointments", value: "2", detail: "upcoming visits", icon: CalendarCheck },
+    { label: "My Prescriptions", value: "3", detail: "active medicines", icon: Pill },
+    { label: "My Lab Results", value: "4", detail: "published reports", icon: FlaskConical },
+    { label: "My Bills", value: "1", detail: "payment pending", icon: BadgeDollarSign }
+  ];
+
+  return (
+    <main className="space-y-6 bg-[radial-gradient(circle_at_top_left,_rgba(20,184,166,0.08),_transparent_25%)] p-5 lg:p-6">
+      <section className="rounded-2xl border border-border/70 bg-card p-6 shadow-sm">
+        <div className="max-w-3xl">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+            <HeartPulse className="h-4 w-4" />
+            Patient Portal
+          </div>
+          <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            Welcome, {name}
+          </h1>
+          <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+            View your care summary without access to staff-only hospital operations.
+          </p>
+        </div>
+      </section>
+
+      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {patientCards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <article key={card.label} className="rounded-2xl border border-border/70 bg-card p-4 shadow-sm">
+              <Icon className="h-5 w-5 text-primary" />
+              <div className="mt-4 text-3xl font-semibold">{card.value}</div>
+              <div className="text-sm font-medium">{card.label}</div>
+              <div className="mt-1 text-xs text-muted-foreground">{card.detail}</div>
+            </article>
+          );
+        })}
+      </section>
+
+      <section className="grid gap-6 xl:grid-cols-[1fr_0.9fr]">
+        <article className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <CalendarCheck className="h-5 w-5 text-primary" />
+            <h2 className="font-semibold">Upcoming Appointment</h2>
+          </div>
+          <div className="mt-4 rounded-xl border border-border/60 bg-background p-4">
+            <p className="font-medium">Dr. Ahmad - Aug 15, 10:00 AM</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              General consultation, outpatient clinic, Room OPD-3.
+            </p>
+          </div>
+        </article>
+
+        <article className="rounded-2xl border border-border/70 bg-card p-5 shadow-sm">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-5 w-5 text-primary" />
+            <h2 className="font-semibold">Your Access</h2>
+          </div>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Patient accounts can only access personal care information. Staff modules such as user
+            management, patient registry, pharmacy inventory, billing management, and laboratory
+            queue are blocked by RBAC.
+          </p>
+        </article>
+      </section>
+    </main>
+  );
+}
+

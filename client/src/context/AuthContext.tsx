@@ -34,7 +34,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
        */
       const sessionResponse = await authService.getCurrentUser();
 
-      const sessionUser = sessionResponse?.data?.user ?? sessionResponse?.user ?? null;
+      const sessionUser = sessionResponse.data?.user ?? null;
 
       if (!sessionUser) {
         setUserState(null);
@@ -159,3 +159,4 @@ export function useAuth() {
 
   return context;
 }
+

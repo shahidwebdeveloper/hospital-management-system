@@ -59,7 +59,13 @@ export class UserController {
 
       return res.json({
         success: true,
-        data: user
+        data: {
+          id: String(user._id),
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          image: undefined
+        }
       });
     } catch (error) {
       next(error);
@@ -139,3 +145,4 @@ export class UserController {
     }
   }
 }
+

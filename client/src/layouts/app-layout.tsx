@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
-import { moduleDefinitions, roleLabels } from "@hms/contracts";
+import { canAccessModule, moduleDefinitions, roleLabels } from "@hms/contracts";
 import type { AppRole, HospitalModule } from "@hms/contracts";
 
 import { Button } from "@/components/ui/button";
@@ -43,20 +43,15 @@ const navItemsBase = [
   ...moduleDefinitions.map((module) => ({
     label: module.label,
     path: `/app${module.path}`,
-    key: module.key,
-    allowedRoles: module.allowedRoles
+    key: module.key
   }))
 ];
 
 export default function AppLayout() {
   const { user, logout, loading } = useAuth();
-
-  const visibleNav = navItemsBase.filter((item) => {
-    if (item.key === "dashboard") return true;
-    const role = user?.role as AppRole | undefined;
-    if (!role) return true;
-    return "allowedRoles" in item ? item.allowedRoles.includes(role) : true;
-  });
+  const role = user?.role as AppRole | undefined;
+  const visibleNav = navItemsBase.filter((item) => canAccessModule(role, item.key));
+  const isPatient = user?.role === "patient";
 
   return (
     <div className="min-h-screen bg-background text-foreground lg:grid lg:grid-cols-[280px_1fr]">
@@ -67,7 +62,7 @@ export default function AppLayout() {
           </div>
           <div>
             <p className="text-sm font-semibold text-primary">HMS</p>
-            <h1 className="text-lg font-semibold">Hospital System</h1>
+            <h1 className="text-lg font-semibold">{isPatient ? "Patient Portal" : "Hospital System"}</h1>
           </div>
         </div>
 
@@ -98,8 +93,12 @@ export default function AppLayout() {
         <header className="border-b bg-white">
           <div className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Operational workspace</p>
-              <h2 className="text-xl font-semibold">Hospital Management Application</h2>
+              <p className="text-sm font-medium text-muted-foreground">
+                {isPatient ? "Personal care workspace" : "Operational workspace"}
+              </p>
+              <h2 className="text-xl font-semibold">
+                {isPatient ? "My Hospital Portal" : "Hospital Management Application"}
+              </h2>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <span className="inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm font-medium">

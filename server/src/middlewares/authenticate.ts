@@ -13,29 +13,22 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       }
     }
 
-    /**
-     * Get Better Auth session
-     */
     const session = await auth.api.getSession({
       headers
     });
 
-    if (!session?.user) {
+    if (!session?.user?.email) {
       return res.status(401).json({
         success: false,
         message: "Unauthorized"
       });
     }
 
-    /**
-     * Find the corresponding HMS user.
-     *
-     * We use the email because your HMS User
-     * already stores the same email as Better Auth.
-     */
-    const hmsUser = await User.findOne(
+    const normalizedEmail = session.user.email.toLowerCase().trim();
+
+    let hmsUser = await User.findOne(
       {
-        email: session.user.email.toLowerCase()
+        email: normalizedEmail
       },
       {
         password: 0
@@ -43,15 +36,16 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     );
 
     if (!hmsUser) {
-      return res.status(404).json({
-        success: false,
-        message: "HMS user not found"
+      hmsUser = await User.create({
+        authUserId: session.user.id,
+        name: session.user.name || normalizedEmail.split("@")[0] || "HMS User",
+        email: normalizedEmail,
+        role: "patient",
+        isActive: true,
+        isVerified: Boolean(session.user.emailVerified)
       });
     }
 
-    /**
-     * Check whether the HMS account is active.
-     */
     if (!hmsUser.isActive) {
       return res.status(403).json({
         success: false,
@@ -59,12 +53,8 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
       });
     }
 
-    /**
-     * Attach the authenticated HMS user
-     * to the Express request.
-     */
     req.user = {
-      id: hmsUser.id,
+      id: String(hmsUser._id),
       name: hmsUser.name,
       email: hmsUser.email,
       role: hmsUser.role
@@ -75,3 +65,4 @@ export async function authenticate(req: Request, res: Response, next: NextFuncti
     return next(error);
   }
 }
+

@@ -65,6 +65,15 @@ export class PatientService {
   }
 
   /**
+   * Get the patient profile connected to an HMS user.
+   */
+  static async getPatientByUserId(userId: string) {
+    const patient = await PatientModel.findOne({ userId });
+
+    return patient;
+  }
+
+  /**
    * Get a patient by ID
    */
   static async getPatientById(id: string) {
@@ -94,3 +103,4 @@ export class PatientService {
     return patient;
   }
 }
+

@@ -1,7 +1,18 @@
 import type { NextFunction, Request, Response } from "express";
+
+import { hasPermission, permissionRoles } from "@hms/contracts";
+import type { AppRole, Permission } from "@hms/contracts";
+
 import { resourceDefinitionMap } from "../modules/resources/resource-definitions.js";
 
-export function authorize(allowedRoles: readonly string[]) {
+function forbidden(res: Response) {
+  return res.status(403).json({
+    success: false,
+    message: "You do not have permission to perform this action"
+  });
+}
+
+export function authorize(allowedRoles: readonly AppRole[]) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user;
 
@@ -12,18 +23,30 @@ export function authorize(allowedRoles: readonly string[]) {
       });
     }
 
-    if (allowedRoles.length === 0) {
+    if (allowedRoles.length === 0 || allowedRoles.includes(user.role)) {
       return next();
     }
 
-    if (!allowedRoles.includes(user.role)) {
-      return res.status(403).json({
+    return forbidden(res);
+  };
+}
+
+export function authorizePermission(permission: Permission) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user;
+
+    if (!user) {
+      return res.status(401).json({
         success: false,
-        message: "Forbidden"
+        message: "Unauthorized"
       });
     }
 
-    return next();
+    if (hasPermission(user.role, permission)) {
+      return next();
+    }
+
+    return forbidden(res);
   };
 }
 
@@ -39,16 +62,7 @@ export function authorizeResource() {
         });
       }
 
-      const resource = resourceParam;
-
-      if (!resource) {
-        return res.status(400).json({
-          success: false,
-          message: "Missing resource"
-        });
-      }
-
-      const definition = resourceDefinitionMap.get(resource as never);
+      const definition = resourceDefinitionMap.get(resourceParam as never);
 
       if (!definition) {
         return res.status(404).json({
@@ -67,10 +81,7 @@ export function authorizeResource() {
       }
 
       if (!definition.allowedRoles.includes(user.role)) {
-        return res.status(403).json({
-          success: false,
-          message: "Forbidden"
-        });
+        return forbidden(res);
       }
 
       return next();
@@ -80,4 +91,5 @@ export function authorizeResource() {
   };
 }
 
+export { permissionRoles };
 export default authorize;
