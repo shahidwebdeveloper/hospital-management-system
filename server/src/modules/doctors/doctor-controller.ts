@@ -1,10 +1,10 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import { DoctorService } from "./doctor-service.js";
 import { createDoctorSchema, updateDoctorSchema } from "./doctor-validation.js";
 
 export class DoctorController {
-  static async createDoctor(req: Request, res: Response) {
+  static async createDoctor(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = createDoctorSchema.parse(req.validatedBody ?? req.body);
       const doctor = await DoctorService.createDoctor(validatedData);
@@ -15,21 +15,21 @@ export class DoctorController {
         data: doctor
       });
     } catch (error) {
-      return res.status(500).json({ success: false, message: "Failed to create doctor.", error });
+      next(error);
     }
   }
 
-  static async getDoctors(req: Request, res: Response) {
+  static async getDoctors(req: Request, res: Response, next: NextFunction) {
     try {
       const search = typeof req.query.search === "string" ? req.query.search : "";
       const doctors = await DoctorService.getDoctors(search);
       return res.status(200).json({ success: true, data: doctors });
     } catch (error) {
-      return res.status(500).json({ success: false, message: "Failed to fetch doctors.", error });
+      next(error);
     }
   }
 
-  static async getDoctorById(req: Request, res: Response) {
+  static async getDoctorById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -43,11 +43,11 @@ export class DoctorController {
 
       return res.status(200).json({ success: true, data: doctor });
     } catch (error) {
-      return res.status(500).json({ success: false, message: "Failed to fetch doctor.", error });
+      next(error);
     }
   }
 
-  static async updateDoctor(req: Request, res: Response) {
+  static async updateDoctor(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -65,11 +65,11 @@ export class DoctorController {
         .status(200)
         .json({ success: true, message: "Doctor updated successfully.", data: doctor });
     } catch (error) {
-      return res.status(500).json({ success: false, message: "Failed to update doctor.", error });
+      next(error);
     }
   }
 
-  static async deleteDoctor(req: Request, res: Response) {
+  static async deleteDoctor(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -83,7 +83,7 @@ export class DoctorController {
 
       return res.status(200).json({ success: true, message: "Doctor deleted successfully." });
     } catch (error) {
-      return res.status(500).json({ success: false, message: "Failed to delete doctor.", error });
+      next(error);
     }
   }
 }

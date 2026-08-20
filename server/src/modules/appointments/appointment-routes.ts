@@ -11,22 +11,22 @@ import {
 
 export const appointmentRouter = Router();
 
-appointmentRouter.post("/", authorizePermission("appointments:create"), validateRequest(createAppointmentSchema), (req, res) =>
-  AppointmentController.createAppointment(req, res)
+appointmentRouter.post("/", authorizePermission("appointments:create"), validateRequest(createAppointmentSchema), (req, res, next) =>
+  AppointmentController.createAppointment(req, res, next)
 );
-appointmentRouter.get("/", authorizePermission("appointments:view"), (req, res) =>
-  AppointmentController.getAppointments(req, res)
+appointmentRouter.get("/", authorizePermission("appointments:view"), (req, res, next) =>
+  AppointmentController.getAppointments(req, res, next)
 );
-appointmentRouter.get("/:id", authorizePermission("appointments:view"), validateRequest(appointmentIdSchema), (req, res) =>
-  AppointmentController.getAppointmentById(req, res)
+appointmentRouter.get("/:id", authorizePermission("appointments:view"), validateRequest(appointmentIdSchema), (req, res, next) =>
+  AppointmentController.getAppointmentById(req, res, next)
 );
 appointmentRouter.patch(
   "/:id",
   authorizePermission("appointments:update"),
   validateRequest(appointmentIdSchema),
   validateRequest(updateAppointmentSchema),
-  (req, res) => AppointmentController.updateAppointment(req, res)
+  (req, res, next) => AppointmentController.updateAppointment(req, res, next)
 );
-appointmentRouter.delete("/:id", authorizePermission("appointments:delete"), validateRequest(appointmentIdSchema), (req, res) =>
-  AppointmentController.deleteAppointment(req, res)
+appointmentRouter.delete("/:id", authorizePermission("appointments:delete"), validateRequest(appointmentIdSchema), (req, res, next) =>
+  AppointmentController.deleteAppointment(req, res, next)
 );

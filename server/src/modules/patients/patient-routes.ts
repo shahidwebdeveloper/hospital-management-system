@@ -9,18 +9,18 @@ import { createPatientSchema, patientIdSchema, updatePatientSchema } from "./pat
 
 export const patientRouter = Router();
 
-patientRouter.get("/me", authorize(appRoles), (req, res) =>
-  PatientController.getCurrentPatient(req, res)
+patientRouter.get("/me", authorize(appRoles), (req, res, next) =>
+  PatientController.getCurrentPatient(req, res, next)
 );
 
-patientRouter.post("/", authorizePermission("patients:create"), validateRequest(createPatientSchema), (req, res) =>
-  PatientController.createPatient(req, res)
+patientRouter.post("/", authorizePermission("patients:create"), validateRequest(createPatientSchema), (req, res, next) =>
+  PatientController.createPatient(req, res, next)
 );
 
-patientRouter.get("/", authorizePermission("patients:view"), (req, res) => PatientController.getPatients(req, res));
+patientRouter.get("/", authorizePermission("patients:view"), (req, res, next) => PatientController.getPatients(req, res, next));
 
-patientRouter.get("/:id", authorizePermission("patients:view"), validateRequest(patientIdSchema), (req, res) =>
-  PatientController.getPatientById(req, res)
+patientRouter.get("/:id", authorizePermission("patients:view"), validateRequest(patientIdSchema), (req, res, next) =>
+  PatientController.getPatientById(req, res, next)
 );
 
 patientRouter.patch(
@@ -28,9 +28,9 @@ patientRouter.patch(
   authorizePermission("patients:update"),
   validateRequest(patientIdSchema),
   validateRequest(updatePatientSchema),
-  (req, res) => PatientController.updatePatient(req, res)
+  (req, res, next) => PatientController.updatePatient(req, res, next)
 );
 
-patientRouter.delete("/:id", authorizePermission("patients:delete"), validateRequest(patientIdSchema), (req, res) =>
-  PatientController.deletePatient(req, res)
+patientRouter.delete("/:id", authorizePermission("patients:delete"), validateRequest(patientIdSchema), (req, res, next) =>
+  PatientController.deletePatient(req, res, next)
 );

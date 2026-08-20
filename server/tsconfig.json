@@ -3,6 +3,10 @@
   "compilerOptions": {
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "baseUrl": ".",
+    "paths": {
+      "@hms/contracts": ["../contracts/dist/index.d.ts"]
+    },
     "outDir": "dist",
     "rootDir": "src",
     "types": ["node"],

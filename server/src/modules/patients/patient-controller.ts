@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import type { Patient } from "./patient-model.js";
 
@@ -10,7 +10,7 @@ export class PatientController {
   /**
    * Create Patient
    */
-  static async createPatient(req: Request, res: Response) {
+  static async createPatient(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = createPatientSchema.parse(req.validatedBody ?? req.body);
 
@@ -24,20 +24,14 @@ export class PatientController {
         data: patient
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to create patient.",
-
-        error
-      });
+      next(error);
     }
   }
 
   /**
    * Get All Patients
    */
-  static async getPatients(req: Request, res: Response) {
+  static async getPatients(req: Request, res: Response, next: NextFunction) {
     try {
       const search = typeof req.query.search === "string" ? req.query.search : "";
       const patients = await PatientService.getPatients(search);
@@ -48,20 +42,14 @@ export class PatientController {
         data: patients
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to fetch patients.",
-
-        error
-      });
+      next(error);
     }
   }
 
   /**
    * Get Current Patient Profile
    */
-  static async getCurrentPatient(req: Request, res: Response) {
+  static async getCurrentPatient(req: Request, res: Response, next: NextFunction) {
     try {
       if (!req.user?.id) {
         return res.status(401).json({
@@ -87,19 +75,13 @@ export class PatientController {
         data: patient
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to fetch current patient profile.",
-
-        error
-      });
+      next(error);
     }
   }
   /**
    * Get Patient By ID
    */
-  static async getPatientById(req: Request, res: Response) {
+  static async getPatientById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
 
@@ -127,20 +109,14 @@ export class PatientController {
         data: patient
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to fetch patient.",
-
-        error
-      });
+      next(error);
     }
   }
 
   /**
    * Update Patient
    */
-  static async updatePatient(req: Request, res: Response) {
+  static async updatePatient(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
 
@@ -174,20 +150,14 @@ export class PatientController {
         data: patient
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to update patient.",
-
-        error
-      });
+      next(error);
     }
   }
 
   /**
    * Delete Patient
    */
-  static async deletePatient(req: Request, res: Response) {
+  static async deletePatient(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
 
@@ -215,13 +185,7 @@ export class PatientController {
         message: "Patient deleted successfully."
       });
     } catch (error) {
-      return res.status(500).json({
-        success: false,
-
-        message: "Failed to delete patient.",
-
-        error
-      });
+      next(error);
     }
   }
 }

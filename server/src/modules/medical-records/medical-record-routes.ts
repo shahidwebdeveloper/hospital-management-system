@@ -11,22 +11,22 @@ import {
 
 export const medicalRecordRouter = Router();
 
-medicalRecordRouter.post("/", authorizePermission("medical-records:create"), validateRequest(createMedicalRecordSchema), (req, res) =>
-  MedicalRecordController.createMedicalRecord(req, res)
+medicalRecordRouter.post("/", authorizePermission("medical-records:create"), validateRequest(createMedicalRecordSchema), (req, res, next) =>
+  MedicalRecordController.createMedicalRecord(req, res, next)
 );
-medicalRecordRouter.get("/", authorizePermission("medical-records:view"), (req, res) =>
-  MedicalRecordController.getMedicalRecords(req, res)
+medicalRecordRouter.get("/", authorizePermission("medical-records:view"), (req, res, next) =>
+  MedicalRecordController.getMedicalRecords(req, res, next)
 );
-medicalRecordRouter.get("/:id", authorizePermission("medical-records:view"), validateRequest(medicalRecordIdSchema), (req, res) =>
-  MedicalRecordController.getMedicalRecordById(req, res)
+medicalRecordRouter.get("/:id", authorizePermission("medical-records:view"), validateRequest(medicalRecordIdSchema), (req, res, next) =>
+  MedicalRecordController.getMedicalRecordById(req, res, next)
 );
 medicalRecordRouter.patch(
   "/:id",
   authorizePermission("medical-records:update"),
   validateRequest(medicalRecordIdSchema),
   validateRequest(updateMedicalRecordSchema),
-  (req, res) => MedicalRecordController.updateMedicalRecord(req, res)
+  (req, res, next) => MedicalRecordController.updateMedicalRecord(req, res, next)
 );
-medicalRecordRouter.delete("/:id", authorizePermission("medical-records:delete"), validateRequest(medicalRecordIdSchema), (req, res) =>
-  MedicalRecordController.deleteMedicalRecord(req, res)
+medicalRecordRouter.delete("/:id", authorizePermission("medical-records:delete"), validateRequest(medicalRecordIdSchema), (req, res, next) =>
+  MedicalRecordController.deleteMedicalRecord(req, res, next)
 );

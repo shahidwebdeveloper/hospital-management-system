@@ -1,10 +1,10 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import { AppointmentService } from "./appointment-service.js";
 import { createAppointmentSchema, updateAppointmentSchema } from "./appointment-validation.js";
 
 export class AppointmentController {
-  static async createAppointment(req: Request, res: Response) {
+  static async createAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = createAppointmentSchema.parse(req.validatedBody ?? req.body);
       const appointment = await AppointmentService.createAppointment(validatedData);
@@ -13,24 +13,20 @@ export class AppointmentController {
         .status(201)
         .json({ success: true, message: "Appointment created successfully.", data: appointment });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to create appointment.", error });
+      next(error);
     }
   }
 
-  static async getAppointments(_req: Request, res: Response) {
+  static async getAppointments(_req: Request, res: Response, next: NextFunction) {
     try {
       const appointments = await AppointmentService.getAppointments();
       return res.status(200).json({ success: true, data: appointments });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch appointments.", error });
+      next(error);
     }
   }
 
-  static async getAppointmentById(req: Request, res: Response) {
+  static async getAppointmentById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -44,13 +40,11 @@ export class AppointmentController {
 
       return res.status(200).json({ success: true, data: appointment });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch appointment.", error });
+      next(error);
     }
   }
 
-  static async updateAppointment(req: Request, res: Response) {
+  static async updateAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -68,13 +62,11 @@ export class AppointmentController {
         .status(200)
         .json({ success: true, message: "Appointment updated successfully.", data: appointment });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to update appointment.", error });
+      next(error);
     }
   }
 
-  static async deleteAppointment(req: Request, res: Response) {
+  static async deleteAppointment(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -88,9 +80,7 @@ export class AppointmentController {
 
       return res.status(200).json({ success: true, message: "Appointment deleted successfully." });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to delete appointment.", error });
+      next(error);
     }
   }
 }

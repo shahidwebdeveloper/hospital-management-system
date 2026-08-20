@@ -45,6 +45,13 @@ npm run dev
 
 The API runs on `http://localhost:5000` and the web app runs on `http://localhost:5173`.
 
+## Authentication note
+
+Authentication is provided exclusively by Better Auth. The legacy JWT and password helper
+stubs and the empty `server/src/modules/auth` scaffold have been retired; do not introduce a
+second authentication system. Use Better Auth sessions through `server/src/lib/auth.ts` and
+the HMS user profile created by `server/src/middlewares/authenticate.ts`.
+
 ## Zero to Hero Roadmap
 
 Project status:

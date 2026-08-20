@@ -1,10 +1,10 @@
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 
 import { PrescriptionService } from "./prescription-service.js";
 import { createPrescriptionSchema, updatePrescriptionSchema } from "./prescription-validation.js";
 
 export class PrescriptionController {
-  static async createPrescription(req: Request, res: Response) {
+  static async createPrescription(req: Request, res: Response, next: NextFunction) {
     try {
       const validatedData = createPrescriptionSchema.parse(req.validatedBody ?? req.body);
       const prescription = await PrescriptionService.createPrescription({
@@ -19,24 +19,20 @@ export class PrescriptionController {
         .status(201)
         .json({ success: true, message: "Prescription created successfully.", data: prescription });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to create prescription.", error });
+      next(error);
     }
   }
 
-  static async getPrescriptions(_req: Request, res: Response) {
+  static async getPrescriptions(_req: Request, res: Response, next: NextFunction) {
     try {
       const prescriptions = await PrescriptionService.getPrescriptions();
       return res.status(200).json({ success: true, data: prescriptions });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch prescriptions.", error });
+      next(error);
     }
   }
 
-  static async getPrescriptionById(req: Request, res: Response) {
+  static async getPrescriptionById(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -50,13 +46,11 @@ export class PrescriptionController {
 
       return res.status(200).json({ success: true, data: prescription });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to fetch prescription.", error });
+      next(error);
     }
   }
 
-  static async updatePrescription(req: Request, res: Response) {
+  static async updatePrescription(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -80,13 +74,11 @@ export class PrescriptionController {
         .status(200)
         .json({ success: true, message: "Prescription updated successfully.", data: prescription });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to update prescription.", error });
+      next(error);
     }
   }
 
-  static async deletePrescription(req: Request, res: Response) {
+  static async deletePrescription(req: Request, res: Response, next: NextFunction) {
     try {
       const { id } = req.params;
       if (!id || Array.isArray(id)) {
@@ -100,9 +92,7 @@ export class PrescriptionController {
 
       return res.status(200).json({ success: true, message: "Prescription deleted successfully." });
     } catch (error) {
-      return res
-        .status(500)
-        .json({ success: false, message: "Failed to delete prescription.", error });
+      next(error);
     }
   }
 }
