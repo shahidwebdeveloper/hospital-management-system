@@ -8,8 +8,8 @@ export class AppointmentService {
     return AppointmentModel.create(data);
   }
 
-  static async getAppointments() {
-    return AppointmentModel.find().sort({ appointmentDate: 1 });
+  static async getAppointments(scope: Record<string, unknown> = {}) {
+    return AppointmentModel.find(scope).sort({ appointmentDate: 1 });
   }
 
   static async getAppointmentById(id: string) {

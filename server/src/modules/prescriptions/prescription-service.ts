@@ -23,8 +23,8 @@ export class PrescriptionService {
     return PrescriptionModel.create(data);
   }
 
-  static async getPrescriptions() {
-    return PrescriptionModel.find().sort({ createdAt: -1 });
+  static async getPrescriptions(scope: Record<string, unknown> = {}) {
+    return PrescriptionModel.find(scope).sort({ createdAt: -1 });
   }
 
   static async getPrescriptionById(id: string) {

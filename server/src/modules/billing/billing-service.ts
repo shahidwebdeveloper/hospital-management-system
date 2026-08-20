@@ -77,8 +77,8 @@ export class BillingService {
     });
   }
 
-  static async getAllInvoices() {
-    return await InvoiceModel.find().sort({ createdAt: -1 });
+  static async getAllInvoices(scope: Record<string, unknown> = {}) {
+    return await InvoiceModel.find(scope).sort({ createdAt: -1 });
   }
 
   static async getInvoiceById(id: string) {

@@ -11,6 +11,7 @@ declare global {
         email: string;
         role: UserRole;
       };
+      authorizedResource?: unknown;
     }
   }
 }

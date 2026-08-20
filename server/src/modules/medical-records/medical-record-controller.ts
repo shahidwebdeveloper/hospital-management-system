@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { MedicalRecordService } from "./medical-record-service.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 import {
   createMedicalRecordSchema,
   updateMedicalRecordSchema
@@ -26,7 +27,7 @@ export class MedicalRecordController {
 
   static async getMedicalRecords(_req: Request, res: Response, next: NextFunction) {
     try {
-      const records = await MedicalRecordService.getMedicalRecords();
+      const records = await MedicalRecordService.getMedicalRecords(await resourceScope("medical-record", _req.user!));
       return res.status(200).json({ success: true, data: records });
     } catch (error) {
       next(error);

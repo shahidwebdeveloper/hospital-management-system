@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { PrescriptionService } from "./prescription-service.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 import { createPrescriptionSchema, updatePrescriptionSchema } from "./prescription-validation.js";
 
 export class PrescriptionController {
@@ -25,7 +26,7 @@ export class PrescriptionController {
 
   static async getPrescriptions(_req: Request, res: Response, next: NextFunction) {
     try {
-      const prescriptions = await PrescriptionService.getPrescriptions();
+      const prescriptions = await PrescriptionService.getPrescriptions(await resourceScope("prescription", _req.user!));
       return res.status(200).json({ success: true, data: prescriptions });
     } catch (error) {
       next(error);

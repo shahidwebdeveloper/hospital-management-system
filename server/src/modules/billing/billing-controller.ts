@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 import { BillingService } from "./billing-service.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 import { createInvoiceSchema, updateInvoiceSchema, invoiceIdSchema } from "./billing-validation.js";
 
 export class BillingController {
@@ -21,7 +22,7 @@ export class BillingController {
 
   static async getAllInvoices(_req: Request, res: Response, next: NextFunction) {
     try {
-      const invoices = await BillingService.getAllInvoices();
+      const invoices = await BillingService.getAllInvoices(await resourceScope("invoice", _req.user!));
       return res.status(200).json({ success: true, data: invoices });
     } catch (error) {
       next(error);

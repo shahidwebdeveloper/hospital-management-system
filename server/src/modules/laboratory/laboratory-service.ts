@@ -16,8 +16,8 @@ export class LaboratoryService {
     });
   }
 
-  static async getAllRequests() {
-    return await Laboratory.find().populate("patient").populate("doctor").sort({ createdAt: -1 });
+  static async getAllRequests(scope: Record<string, unknown> = {}) {
+    return await Laboratory.find(scope).populate("patient").populate("doctor").sort({ createdAt: -1 });
   }
 
   static async getQueue() {

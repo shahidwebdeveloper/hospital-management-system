@@ -8,8 +8,8 @@ export class MedicalRecordService {
     return MedicalRecordModel.create(data);
   }
 
-  static async getMedicalRecords() {
-    return MedicalRecordModel.find().sort({ createdAt: -1 });
+  static async getMedicalRecords(scope: Record<string, unknown> = {}) {
+    return MedicalRecordModel.find(scope).sort({ createdAt: -1 });
   }
 
   static async getMedicalRecordById(id: string) {

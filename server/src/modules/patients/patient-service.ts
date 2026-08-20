@@ -17,7 +17,7 @@ export class PatientService {
   /**
    * Get all patients
    */
-  static async getPatients(search = "") {
+  static async getPatients(search = "", scope: Record<string, unknown> = {}) {
     const normalizedSearch = search.trim();
 
     const filters = normalizedSearch
@@ -57,7 +57,7 @@ export class PatientService {
         }
       : {};
 
-    const patients = await PatientModel.find(filters).sort({
+    const patients = await PatientModel.find({ ...filters, ...scope }).sort({
       createdAt: -1
     });
 

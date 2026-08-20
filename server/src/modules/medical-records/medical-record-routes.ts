@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { authorizePermission } from "../../middlewares/authorize.js";
+import { authorizeResource } from "../../middlewares/authorize-resource.js";
 import { validateRequest } from "../../middlewares/validate-request.js";
 import { MedicalRecordController } from "./medical-record-controller.js";
 import {
@@ -17,16 +18,17 @@ medicalRecordRouter.post("/", authorizePermission("medical-records:create"), val
 medicalRecordRouter.get("/", authorizePermission("medical-records:view"), (req, res, next) =>
   MedicalRecordController.getMedicalRecords(req, res, next)
 );
-medicalRecordRouter.get("/:id", authorizePermission("medical-records:view"), validateRequest(medicalRecordIdSchema), (req, res, next) =>
+medicalRecordRouter.get("/:id", authorizePermission("medical-records:view"), validateRequest(medicalRecordIdSchema), authorizeResource("medical-record"), (req, res, next) =>
   MedicalRecordController.getMedicalRecordById(req, res, next)
 );
 medicalRecordRouter.patch(
   "/:id",
   authorizePermission("medical-records:update"),
   validateRequest(medicalRecordIdSchema),
+  authorizeResource("medical-record"),
   validateRequest(updateMedicalRecordSchema),
   (req, res, next) => MedicalRecordController.updateMedicalRecord(req, res, next)
 );
-medicalRecordRouter.delete("/:id", authorizePermission("medical-records:delete"), validateRequest(medicalRecordIdSchema), (req, res, next) =>
+medicalRecordRouter.delete("/:id", authorizePermission("medical-records:delete"), validateRequest(medicalRecordIdSchema), authorizeResource("medical-record"), (req, res, next) =>
   MedicalRecordController.deleteMedicalRecord(req, res, next)
 );

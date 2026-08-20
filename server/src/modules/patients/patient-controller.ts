@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import type { Patient } from "./patient-model.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 
 import { PatientService } from "./patient-service.js";
 
@@ -34,7 +35,7 @@ export class PatientController {
   static async getPatients(req: Request, res: Response, next: NextFunction) {
     try {
       const search = typeof req.query.search === "string" ? req.query.search : "";
-      const patients = await PatientService.getPatients(search);
+      const patients = await PatientService.getPatients(search, await resourceScope("patient", req.user!));
 
       return res.status(200).json({
         success: true,

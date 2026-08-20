@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { AppointmentService } from "./appointment-service.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 import { createAppointmentSchema, updateAppointmentSchema } from "./appointment-validation.js";
 
 export class AppointmentController {
@@ -19,7 +20,7 @@ export class AppointmentController {
 
   static async getAppointments(_req: Request, res: Response, next: NextFunction) {
     try {
-      const appointments = await AppointmentService.getAppointments();
+      const appointments = await AppointmentService.getAppointments(await resourceScope("appointment", _req.user!));
       return res.status(200).json({ success: true, data: appointments });
     } catch (error) {
       next(error);

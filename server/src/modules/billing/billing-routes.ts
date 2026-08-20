@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { authorizePermission } from "../../middlewares/authorize.js";
+import { authorizeResource } from "../../middlewares/authorize-resource.js";
 import { validateRequest } from "../../middlewares/validate-request.js";
 import { BillingController } from "./billing-controller.js";
 import { createInvoiceSchema, invoiceIdSchema, updateInvoiceSchema } from "./billing-validation.js";
@@ -13,16 +14,17 @@ billingRouter.post("/", authorizePermission("billing:create"), validateRequest(c
 billingRouter.get("/", authorizePermission("billing:view"), (req, res, next) =>
   BillingController.getAllInvoices(req, res, next)
 );
-billingRouter.get("/:id", authorizePermission("billing:view"), validateRequest(invoiceIdSchema), (req, res, next) =>
+billingRouter.get("/:id", authorizePermission("billing:view"), validateRequest(invoiceIdSchema), authorizeResource("invoice"), (req, res, next) =>
   BillingController.getInvoiceById(req, res, next)
 );
 billingRouter.patch(
   "/:id",
   authorizePermission("billing:update"),
   validateRequest(invoiceIdSchema),
+  authorizeResource("invoice"),
   validateRequest(updateInvoiceSchema),
   (req, res, next) => BillingController.updateInvoice(req, res, next)
 );
-billingRouter.delete("/:id", authorizePermission("billing:delete"), validateRequest(invoiceIdSchema), (req, res, next) =>
+billingRouter.delete("/:id", authorizePermission("billing:delete"), validateRequest(invoiceIdSchema), authorizeResource("invoice"), (req, res, next) =>
   BillingController.deleteInvoice(req, res, next)
 );

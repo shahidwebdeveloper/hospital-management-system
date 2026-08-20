@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from "express";
 
 import { LaboratoryService } from "./laboratory-service.js";
+import { resourceScope } from "../../middlewares/authorize-resource.js";
 import {
   createLaboratorySchema,
   updateLaboratoryStatusSchema,
@@ -26,7 +27,7 @@ export class LaboratoryController {
 
   static async getAllRequests(req: Request, res: Response, next: NextFunction) {
     try {
-      const laboratories = await LaboratoryService.getAllRequests();
+      const laboratories = await LaboratoryService.getAllRequests(await resourceScope("laboratory", req.user!));
 
       res.status(200).json({
         success: true,

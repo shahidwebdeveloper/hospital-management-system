@@ -5,6 +5,7 @@ import { moduleAccess, moduleDefinitions } from "@hms/contracts";
 import type { AppRouteModule } from "@hms/contracts";
 
 import ProtectedRoute from "./components/ProtectedRoute";
+import { RequirePermission } from "./components/RequirePermission";
 import ErrorPage from "./components/ErrorPage";
 import AppLayout from "./layouts/app-layout";
 import Dashboard from "./pages/dashboard";
@@ -107,7 +108,7 @@ export const router = createBrowserRouter([
       {
         path: "pharmacy",
         children: [
-          { index: true, element: withRoles(<PharmacyListPage />, "pharmacy") },
+          { index: true, element: <RequirePermission permission="pharmacy:view"><PharmacyListPage /></RequirePermission> },
           { path: "new", element: withRoles(<PharmacyFormPage />, "pharmacy") },
           { path: ":id", element: withRoles(<PharmacyDetailsPage />, "pharmacy") },
           { path: ":id/edit", element: withRoles(<PharmacyFormPage />, "pharmacy") }
@@ -125,7 +126,7 @@ export const router = createBrowserRouter([
       {
         path: "laboratory",
         children: [
-          { index: true, element: withRoles(<LaboratoryQueuePage />, "laboratory") },
+          { index: true, element: <RequirePermission permission="laboratory:manage"><LaboratoryQueuePage /></RequirePermission> },
           { path: "request", element: withRoles(<RequestTestPage />, "laboratory") },
           { path: "result/:id", element: withRoles(<ResultEntryPage />, "laboratory") },
           { path: ":id", element: withRoles(<LaboratoryDetailsPage />, "laboratory") }
