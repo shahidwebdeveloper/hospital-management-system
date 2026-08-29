@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
 import { UserService } from "./user-service.js";
-import type { CreateUserInput, UpdateUserInput } from "./user-types.js";
+import type { CreateUserInput, UpdateUserInput, UserListOptions } from "./user-types.js";
 
 export class UserController {
   /**
@@ -9,7 +9,7 @@ export class UserController {
    */
   static async createUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await UserService.createUser(req.validatedBody as CreateUserInput);
+      const user = await UserService.createUser(req.validatedBody as CreateUserInput, req.user!);
 
       res.status(201).json({
         success: true,
@@ -23,9 +23,10 @@ export class UserController {
   /**
    * Get all HMS users
    */
-  static async getUsers(_req: Request, res: Response, next: NextFunction) {
+  static async getUsers(req: Request, res: Response, next: NextFunction) {
     try {
-      const users = await UserService.getUsers();
+      const { query } = req.validatedBody as { query: UserListOptions };
+      const users = await UserService.getUsers(query);
 
       res.json({
         success: true,
@@ -102,7 +103,7 @@ export class UserController {
     try {
       const id = String(req.params.id ?? "");
 
-      const updatedUser = await UserService.updateUser(id, req.validatedBody as UpdateUserInput);
+      const updatedUser = await UserService.updateUser(id, req.validatedBody as UpdateUserInput, req.user!);
 
       if (!updatedUser) {
         return res.status(404).json({
@@ -127,7 +128,7 @@ export class UserController {
     try {
       const id = String(req.params.id ?? "");
 
-      const deletedUser = await UserService.deleteUser(id);
+      const deletedUser = await UserService.deactivateUser(id, req.user!);
 
       if (!deletedUser) {
         return res.status(404).json({
@@ -138,7 +139,7 @@ export class UserController {
 
       res.json({
         success: true,
-        message: "User deleted successfully"
+        message: "User deactivated successfully"
       });
     } catch (error) {
       next(error);

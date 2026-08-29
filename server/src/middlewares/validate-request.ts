@@ -20,7 +20,7 @@ export const validateRequest =
       return;
     }
 
-    const paramsResult = schema.safeParse({ params: req.params });
+    const paramsResult = schema.safeParse({ params: req.params, query: req.query });
 
     if (paramsResult.success) {
       req.validatedBody = paramsResult.data;

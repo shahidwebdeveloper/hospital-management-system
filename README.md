@@ -52,6 +52,18 @@ stubs and the empty `server/src/modules/auth` scaffold have been retired; do not
 second authentication system. Use Better Auth sessions through `server/src/lib/auth.ts` and
 the HMS user profile created by `server/src/middlewares/authenticate.ts`.
 
+## Create the first administrator
+
+Set these values in `server/.env` (do not commit them), then run the command once. The command is
+idempotent for the same super-admin account and refuses to promote an existing ordinary account.
+
+```powershell
+$env:HMS_ADMIN_NAME = "Hospital Administrator"
+$env:HMS_ADMIN_EMAIL = "admin@example.com"
+$env:HMS_ADMIN_PASSWORD = "use-a-unique-password-with-at-least-14-characters"
+npm run seed:admin --workspace @hms/server
+```
+
 ## Zero to Hero Roadmap
 
 Project status:

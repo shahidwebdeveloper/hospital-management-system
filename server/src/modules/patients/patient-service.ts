@@ -1,4 +1,5 @@
 import { PatientModel, type Patient } from "./patient-model.js";
+import { User } from "../user/user-model.js";
 
 type PatientInput = Omit<Patient, "createdAt" | "updatedAt">;
 
@@ -10,6 +11,15 @@ export class PatientService {
    */
   static async createPatient(data: PatientInput) {
     const patient = await PatientModel.create(data);
+
+    if (patient.email) {
+      const user = await User.findOne({ email: patient.email.toLowerCase(), role: "patient" });
+      if (user) {
+        patient.userId = user._id;
+        await patient.save();
+        await User.findByIdAndUpdate(user._id, { patientProfile: patient._id, updatedBy: user._id });
+      }
+    }
 
     return patient;
   }

@@ -25,6 +25,13 @@ export interface IUser extends Document {
 
   isActive: boolean;
   isVerified: boolean;
+  patientProfile?: Schema.Types.ObjectId;
+  doctorProfile?: Schema.Types.ObjectId;
+  nurseProfile?: Schema.Types.ObjectId;
+  createdBy?: Schema.Types.ObjectId;
+  updatedBy?: Schema.Types.ObjectId;
+  deactivatedBy?: Schema.Types.ObjectId;
+  deactivatedAt?: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -70,7 +77,14 @@ const userSchema = new Schema<IUser>(
     isVerified: {
       type: Boolean,
       default: false
-    }
+    },
+    patientProfile: { type: Schema.Types.ObjectId, ref: "Patient", unique: true, sparse: true },
+    doctorProfile: { type: Schema.Types.ObjectId, ref: "Doctor", unique: true, sparse: true },
+    nurseProfile: { type: Schema.Types.ObjectId, ref: "Nurse", unique: true, sparse: true },
+    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    updatedBy: { type: Schema.Types.ObjectId, ref: "User" },
+    deactivatedBy: { type: Schema.Types.ObjectId, ref: "User" },
+    deactivatedAt: { type: Date }
   },
   {
     timestamps: true

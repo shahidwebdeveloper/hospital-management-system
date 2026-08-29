@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const createDoctorSchema = z.object({
+  userId: z.string().trim().min(1).optional(),
   name: z.string().trim().min(1, "Name is required"),
   email: z.string().trim().email("Invalid email").optional().or(z.literal("")),
   phone: z.string().trim().min(1, "Phone is required"),
@@ -13,6 +14,7 @@ export const createDoctorSchema = z.object({
 });
 
 export const updateDoctorSchema = z.object({
+  userId: z.string().trim().min(1).optional(),
   name: z.string().trim().min(1).optional(),
   email: z.string().trim().email("Invalid email").optional().or(z.literal("")),
   phone: z.string().trim().optional(),

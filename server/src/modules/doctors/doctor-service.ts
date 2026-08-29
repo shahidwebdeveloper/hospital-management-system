@@ -1,13 +1,14 @@
 import { DoctorModel, type Doctor } from "./doctor-model.js";
+import { User } from "../user/user-model.js";
 
-type DoctorInput = Omit<Doctor, "createdAt" | "updatedAt"> & {
-  availableTime?: string;
-};
+type DoctorInput = Omit<Doctor, "createdAt" | "updatedAt" | "userId"> & { availableTime?: string; userId?: string };
 type DoctorUpdateInput = Partial<DoctorInput>;
 
 export class DoctorService {
   static async createDoctor(data: DoctorInput) {
-    return DoctorModel.create(data);
+    const doctor = await DoctorModel.create(data);
+    if (doctor.userId) await User.findByIdAndUpdate(doctor.userId, { doctorProfile: doctor._id });
+    return doctor;
   }
 
   static async getDoctors(search = "") {
@@ -34,10 +35,12 @@ export class DoctorService {
   }
 
   static async updateDoctor(id: string, data: DoctorUpdateInput) {
-    return DoctorModel.findByIdAndUpdate(id, data, {
+    const doctor = await DoctorModel.findByIdAndUpdate(id, data, {
       new: true,
       runValidators: true
     });
+    if (doctor?.userId) await User.findByIdAndUpdate(doctor.userId, { doctorProfile: doctor._id });
+    return doctor;
   }
 
   static async deleteDoctor(id: string) {

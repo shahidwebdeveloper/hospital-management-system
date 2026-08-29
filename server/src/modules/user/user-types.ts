@@ -34,4 +34,11 @@ export interface UpdateUserInput {
    * Password changes should be handled through Better Auth.
    */
   password?: string;
+  deactivatedAt?: Date;
+  deactivatedBy?: string;
+  updatedBy?: string;
 }
+
+export type UserActor = { id: string; role: UserRole };
+
+export type UserListOptions = { search?: string; role?: UserRole; isActive?: boolean; page: number; limit: number };

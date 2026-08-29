@@ -2,6 +2,7 @@ import mongoose, { Schema, type InferSchemaType } from "mongoose";
 
 const doctorSchema = new Schema(
   {
+    userId: { type: Schema.Types.ObjectId, ref: "User", unique: true, sparse: true },
     name: {
       type: String,
       required: true,

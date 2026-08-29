@@ -3,7 +3,7 @@ import { Router } from "express";
 import { authorizePermission } from "../../middlewares/authorize.js";
 import { validateRequest } from "../../middlewares/validate-request.js";
 import { UserController } from "./user-controller.js";
-import { createUserSchema, updateUserSchema, userIdSchema } from "./user-validation.js";
+import { createUserSchema, updateUserSchema, userIdSchema, userListQuerySchema } from "./user-validation.js";
 
 export const userRouter = Router();
 
@@ -13,7 +13,7 @@ userRouter.post("/", authorizePermission("users:create"), validateRequest(create
   UserController.createUser(req, res, next)
 );
 
-userRouter.get("/", authorizePermission("users:view"), (req, res, next) =>
+userRouter.get("/", authorizePermission("users:view"), validateRequest(userListQuerySchema), (req, res, next) =>
   UserController.getUsers(req, res, next)
 );
 

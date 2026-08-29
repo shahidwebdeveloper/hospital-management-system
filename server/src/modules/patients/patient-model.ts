@@ -33,7 +33,9 @@ const patientSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      index: true
+      index: true,
+      unique: true,
+      sparse: true
     },
 
     name: {
