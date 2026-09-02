@@ -27,15 +27,12 @@ const emergencyContactSchema = new Schema(
 
 const patientSchema = new Schema(
   {
-    /**
-     * Links the patient profile to the HMS User.
-     */
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
-      index: true,
       unique: true,
-      sparse: true
+      sparse: true,
+      index: true
     },
 
     name: {
@@ -48,13 +45,16 @@ const patientSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true
+      unique: true,
+      index: true
     },
 
     email: {
       type: String,
       trim: true,
-      lowercase: true
+      lowercase: true,
+      index: true,
+      sparse: true
     },
 
     gender: {
@@ -64,7 +64,8 @@ const patientSchema = new Schema(
     },
 
     dateOfBirth: {
-      type: Date
+      type: Date,
+      index: true
     },
 
     bloodGroup: {
@@ -93,13 +94,17 @@ const patientSchema = new Schema(
       type: String,
       enum: ["registered", "admitted", "discharged"],
       default: "registered",
-      required: true
+      required: true,
+      index: true
     }
   },
   {
     timestamps: true
   }
 );
+
+patientSchema.index({ email: 1, userId: 1 }, { unique: true, sparse: true });
+patientSchema.index({ status: 1, createdAt: -1 });
 
 export type Patient = InferSchemaType<typeof patientSchema>;
 

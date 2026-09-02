@@ -3,23 +3,27 @@ import mongoose, { Schema, type InferSchemaType } from "mongoose";
 const medicalRecordSchema = new Schema(
   {
     patientId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Patient",
       required: true,
-      trim: true
+      index: true
     },
     appointmentId: {
-      type: String,
-      trim: true
+      type: Schema.Types.ObjectId,
+      ref: "Appointment",
+      index: true
     },
     doctorId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      trim: true
+      index: true
     },
     diagnosis: {
       type: String,
       required: true,
-      trim: true
+      trim: true,
+      index: true
     },
     symptoms: {
       type: [String],
@@ -36,18 +40,23 @@ const medicalRecordSchema = new Schema(
       default: ""
     },
     followUpDate: {
-      type: Date
+      type: Date,
+      index: true
     },
     status: {
       type: String,
       enum: ["draft", "active", "closed", "follow_up"],
-      default: "active"
+      default: "active",
+      index: true
     }
   },
   {
     timestamps: true
   }
 );
+
+medicalRecordSchema.index({ patientId: 1, status: 1, updatedAt: -1 });
+medicalRecordSchema.index({ doctorId: 1, patientId: 1, createdAt: -1 });
 
 export type MedicalRecord = InferSchemaType<typeof medicalRecordSchema>;
 

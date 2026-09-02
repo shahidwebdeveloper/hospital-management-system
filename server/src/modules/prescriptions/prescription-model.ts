@@ -29,18 +29,21 @@ const prescriptionItemSchema = new Schema(
 const prescriptionSchema = new Schema(
   {
     patientId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Patient",
       required: true,
-      trim: true
+      index: true
     },
     doctorId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
-      trim: true
+      index: true
     },
     appointmentId: {
-      type: String,
-      trim: true
+      type: Schema.Types.ObjectId,
+      ref: "Appointment",
+      index: true
     },
     items: {
       type: [prescriptionItemSchema],
@@ -49,7 +52,8 @@ const prescriptionSchema = new Schema(
     status: {
       type: String,
       enum: ["issued", "dispensed", "partially_dispensed", "cancelled"],
-      default: "issued"
+      default: "issued",
+      index: true
     },
     notes: {
       type: String,
@@ -61,6 +65,9 @@ const prescriptionSchema = new Schema(
     timestamps: true
   }
 );
+
+prescriptionSchema.index({ patientId: 1, status: 1, createdAt: -1 });
+prescriptionSchema.index({ doctorId: 1, patientId: 1, createdAt: -1 });
 
 export type Prescription = InferSchemaType<typeof prescriptionSchema>;
 export const PrescriptionModel = mongoose.model("Prescription", prescriptionSchema);

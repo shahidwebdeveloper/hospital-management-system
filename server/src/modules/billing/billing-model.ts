@@ -39,12 +39,14 @@ const invoiceSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true
+      unique: true,
+      index: true
     },
     patientId: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Patient",
       required: true,
-      trim: true
+      index: true
     },
     patientName: {
       type: String,
@@ -82,7 +84,8 @@ const invoiceSchema = new Schema(
     status: {
       type: String,
       enum: ["draft", "unpaid", "part_paid", "paid", "refunded", "cancelled"],
-      default: "draft"
+      default: "draft",
+      index: true
     },
     paymentMethod: {
       type: String,
@@ -96,16 +99,21 @@ const invoiceSchema = new Schema(
     },
     issuedAt: {
       type: Date,
-      default: () => new Date()
+      default: () => new Date(),
+      index: true
     },
     dueDate: {
-      type: Date
+      type: Date,
+      index: true
     }
   },
   {
     timestamps: true
   }
 );
+
+invoiceSchema.index({ patientId: 1, status: 1, dueDate: 1 });
+invoiceSchema.index({ status: 1, issuedAt: -1 });
 
 export type Invoice = InferSchemaType<typeof invoiceSchema>;
 export const InvoiceModel = mongoose.model("Invoice", invoiceSchema);
