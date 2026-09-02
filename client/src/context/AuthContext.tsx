@@ -2,6 +2,7 @@ import { createContext, useContext, useMemo, useEffect, useState, type ReactNode
 
 import type { LoginInput, RegisterInput, UserRole } from "@hms/contracts";
 
+import { apiClient } from "@/lib/api-client";
 import { authService } from "@/services/auth-services";
 
 import type { AuthContextType } from "@/types/auth-types";
@@ -53,19 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
        * nurse
        * ...
        */
-      const hmsUserResponse = await fetch("http://localhost:5000/api/v1/users/me", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        }
-      });
-
-      if (!hmsUserResponse.ok) {
-        throw new Error("Unable to get HMS user");
-      }
-
-      const hmsResponse = (await hmsUserResponse.json()) as {
+      const hmsResponse = await apiClient.get<{
         success: boolean;
         data?: {
           id: string;
@@ -74,9 +63,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
           role: UserRole;
           image?: string;
         };
-      };
+      }>("/users/me");
 
-      if (!hmsResponse.success || !hmsResponse.data) {
+      const hmsUser = hmsResponse.data?.data;
+
+      if (!hmsResponse.data?.success || !hmsUser) {
         throw new Error("HMS user not found");
       }
 
@@ -85,11 +76,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
        * Store the HMS user, including their role.
        */
       setUserState({
-        id: hmsResponse.data.id,
-        name: hmsResponse.data.name,
-        email: hmsResponse.data.email,
-        role: hmsResponse.data.role,
-        image: hmsResponse.data.image
+        id: hmsUser.id,
+        name: hmsUser.name,
+        email: hmsUser.email,
+        role: hmsUser.role,
+        image: hmsUser.image
       });
     } catch (error) {
       console.error("Failed to fetch current user:", error);
@@ -159,4 +150,3 @@ export function useAuth() {
 
   return context;
 }
-
