@@ -205,7 +205,10 @@ export const modulePermissions = {
   }
 } satisfies Record<AppRouteModule, Record<AppRole, { level: PermissionLevel; note: string }>>;
 
-function rolesFor(module: AppRouteModule, levels: readonly PermissionLevel[] = ["manage", "create", "view", "own"]) {
+function rolesFor(
+  module: AppRouteModule,
+  levels: readonly PermissionLevel[] = ["manage", "create", "view", "own"]
+) {
   return allRoles.filter((role) => levels.includes(modulePermissions[module][role].level));
 }
 
@@ -231,7 +234,6 @@ export function getModulePermissions(module: AppRouteModule) {
     ...modulePermissions[module][role]
   }));
 }
-
 
 export const permissionActions = ["view", "create", "update", "delete", "manage"] as const;
 export type PermissionAction = (typeof permissionActions)[number];
@@ -279,8 +281,16 @@ export type Permission =
 
 export const permissionRoles = {
   "dashboard:view": appRoles,
-  "patients:view": ["super_admin", "admin", "doctor", "nurse", "receptionist", "lab_technician", "patient"],
-  "patients:create": ["super_admin", "admin", "doctor", "nurse", "receptionist"],
+  "patients:view": [
+    "super_admin",
+    "admin",
+    "doctor",
+    "nurse",
+    "receptionist",
+    "lab_technician",
+    "patient"
+  ],
+  "patients:create": ["super_admin", "admin", "doctor", "receptionist"],
   "patients:update": ["super_admin", "admin", "doctor", "nurse", "receptionist"],
   "patients:delete": ["super_admin", "admin"],
   "doctors:view": ["super_admin", "admin", "doctor", "nurse", "receptionist", "patient"],
@@ -299,7 +309,15 @@ export const permissionRoles = {
   "prescriptions:create": ["super_admin", "admin", "doctor"],
   "prescriptions:update": ["super_admin", "admin", "doctor"],
   "prescriptions:delete": ["super_admin", "admin"],
-  "laboratory:view": ["super_admin", "admin", "doctor", "nurse", "lab_technician", "pharmacist", "patient"],
+  "laboratory:view": [
+    "super_admin",
+    "admin",
+    "doctor",
+    "nurse",
+    "lab_technician",
+    "pharmacist",
+    "patient"
+  ],
   "laboratory:create": ["super_admin", "admin", "doctor"],
   "laboratory:manage": ["super_admin", "admin", "lab_technician"],
   "laboratory:delete": ["super_admin", "admin"],
@@ -425,7 +443,8 @@ export const moduleDefinitions: readonly ModuleDefinition[] = [
     key: "notifications",
     label: "Notifications",
     path: "/notifications",
-    description: "Role-targeted alerts, patient messages, operational reminders, and announcements.",
+    description:
+      "Role-targeted alerts, patient messages, operational reminders, and announcements.",
     statuses: ["unread", "read", "archived"],
     allowedRoles: moduleAccess.notifications,
     permissions: getModulePermissions("notifications")
@@ -453,7 +472,3 @@ export const hospitalRules = [
   "Every operational list supports search, status filters, and pagination-ready data.",
   "Workflow statuses must use module-specific enum values."
 ] as const;
-
-
-
-

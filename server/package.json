@@ -9,7 +9,7 @@
     "start": "node dist/server.js",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "vitest run",
+    "test": "npm run build --workspace @hms/contracts && vitest run",
     "seed:admin": "tsx src/scripts/seed-admin.ts"
   },
   "dependencies": {

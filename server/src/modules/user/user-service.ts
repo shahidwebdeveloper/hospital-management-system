@@ -1,6 +1,7 @@
 import { auth } from "../../lib/auth.js";
 import { User } from "./user-model.js";
 import { ApiError } from "../../utils/api-error.js";
+import { writeAuditLog } from "../../utils/audit.js";
 import type { CreateUserInput, UpdateUserInput, UserActor, UserListOptions } from "./user-types.js";
 
 function canAssignRole(actor: UserActor, role: CreateUserInput["role"]) {
@@ -8,9 +9,15 @@ function canAssignRole(actor: UserActor, role: CreateUserInput["role"]) {
   return actor.role === "admin" && !["super_admin", "admin"].includes(role);
 }
 
-function assertRoleChangeAllowed(actor: UserActor, targetId: string, requestedRole?: CreateUserInput["role"]) {
-  if (actor.id === targetId && requestedRole) throw new ApiError(403, "You cannot change your own role");
-  if (requestedRole && !canAssignRole(actor, requestedRole)) throw new ApiError(403, "You cannot assign this role");
+function assertRoleChangeAllowed(
+  actor: UserActor,
+  targetId: string,
+  requestedRole?: CreateUserInput["role"]
+) {
+  if (actor.id === targetId && requestedRole)
+    throw new ApiError(403, "You cannot change your own role");
+  if (requestedRole && !canAssignRole(actor, requestedRole))
+    throw new ApiError(403, "You cannot assign this role");
 }
 
 async function assertTargetManageAllowed(actor: UserActor, targetId: string) {
@@ -26,7 +33,8 @@ export class UserService {
    * Create a new HMS user
    */
   static async createUser(data: CreateUserInput, actor: UserActor) {
-    if (!canAssignRole(actor, data.role)) throw new ApiError(403, "You cannot create a user with this role");
+    if (!canAssignRole(actor, data.role))
+      throw new ApiError(403, "You cannot create a user with this role");
     /**
      * 1. Create the authentication account through Better Auth.
      *
@@ -67,9 +75,18 @@ export class UserService {
         phone: data.phone,
         role: data.role,
         isActive: data.isActive ?? true,
-        isVerified: data.isVerified ?? false
-        ,createdBy: actor.id,
+        isVerified: data.isVerified ?? false,
+        createdBy: actor.id,
         updatedBy: actor.id
+      });
+
+      writeAuditLog({
+        actorId: actor.id,
+        actorRole: actor.role,
+        targetType: "user",
+        targetId: String(user._id),
+        action: "privilege_changed",
+        details: { createdRole: data.role }
       });
 
       return user;
@@ -97,10 +114,19 @@ export class UserService {
       filters.$or = [{ name: expression }, { email: expression }, { phone: expression }];
     }
     const [items, total] = await Promise.all([
-      User.find(filters).sort({ createdAt: -1 }).skip((options.page - 1) * options.limit).limit(options.limit),
+      User.find(filters)
+        .sort({ createdAt: -1 })
+        .skip((options.page - 1) * options.limit)
+        .limit(options.limit),
       User.countDocuments(filters)
     ]);
-    return { items, total, page: options.page, limit: options.limit, pages: Math.ceil(total / options.limit) };
+    return {
+      items,
+      total,
+      page: options.page,
+      limit: options.limit,
+      pages: Math.ceil(total / options.limit)
+    };
   }
 
   /**
@@ -136,7 +162,8 @@ export class UserService {
     const { password: _password, ...userData } = data;
     await assertTargetManageAllowed(actor, id);
     assertRoleChangeAllowed(actor, id, userData.role);
-    if (actor.id === id && userData.isActive === false) throw new ApiError(403, "You cannot deactivate your own account");
+    if (actor.id === id && userData.isActive === false)
+      throw new ApiError(403, "You cannot deactivate your own account");
     if (userData.isActive === false) {
       userData.deactivatedAt = new Date() as never;
       userData.deactivatedBy = actor.id as never;
@@ -146,10 +173,24 @@ export class UserService {
     }
     userData.updatedBy = actor.id as never;
 
-    return User.findByIdAndUpdate(id, userData, {
+    const updatedUser = await User.findByIdAndUpdate(id, userData, {
       new: true,
       runValidators: true
     });
+
+    writeAuditLog({
+      actorId: actor.id,
+      actorRole: actor.role,
+      targetType: "user",
+      targetId: id,
+      action: "role_changed",
+      details: {
+        previousRole: (await User.findById(id).select("role").lean())?.role,
+        newRole: userData.role
+      }
+    });
+
+    return updatedUser;
   }
 
   /**
@@ -158,6 +199,10 @@ export class UserService {
   static async deactivateUser(id: string, actor: UserActor) {
     if (actor.id === id) throw new ApiError(403, "You cannot deactivate your own account");
     await assertTargetManageAllowed(actor, id);
-    return User.findByIdAndUpdate(id, { isActive: false, deactivatedAt: new Date(), deactivatedBy: actor.id, updatedBy: actor.id }, { new: true });
+    return User.findByIdAndUpdate(
+      id,
+      { isActive: false, deactivatedAt: new Date(), deactivatedBy: actor.id, updatedBy: actor.id },
+      { new: true }
+    );
   }
 }

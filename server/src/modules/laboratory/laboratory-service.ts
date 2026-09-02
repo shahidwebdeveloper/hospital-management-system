@@ -6,6 +6,7 @@ import type {
   LaboratoryResultInput,
   UpdateLaboratoryStatusInput
 } from "./laboratory-validation.js";
+import { logClinicalAudit } from "../../utils/audit.js";
 
 const allowedTransitions: Record<string, string[]> = {
   requested: ["sample_collected", "cancelled"],
@@ -18,6 +19,10 @@ const allowedTransitions: Record<string, string[]> = {
 export class LaboratoryService {
   static canTransitionStatus(currentStatus: string, nextStatus: string) {
     return allowedTransitions[currentStatus]?.includes(nextStatus) ?? false;
+  }
+
+  static isResultFinalized(status: string) {
+    return status === "completed";
   }
 
   static async createLaboratoryRequest(data: CreateLaboratoryInput) {
@@ -100,7 +105,7 @@ export class LaboratoryService {
       throw new Error("A finalized laboratory result cannot be overwritten.");
     }
 
-    return await Laboratory.findByIdAndUpdate(
+    const updated = await Laboratory.findByIdAndUpdate(
       id,
       {
         ...data,
@@ -113,6 +118,21 @@ export class LaboratoryService {
         runValidators: true
       }
     );
+
+    if (updated) {
+      logClinicalAudit({
+        action: "clinical_result_finalized",
+        targetType: "laboratory",
+        targetId: id,
+        details: {
+          patientId: String(updated.patient),
+          status: "completed",
+          result: data.result
+        }
+      });
+    }
+
+    return updated;
   }
 
   static async cancelRequest(id: string) {
