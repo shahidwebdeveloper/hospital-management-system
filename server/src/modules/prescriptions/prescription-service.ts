@@ -19,6 +19,14 @@ type PrescriptionInput = {
 type PrescriptionUpdateInput = Partial<PrescriptionInput>;
 
 export class PrescriptionService {
+  static canUpdateItems({ status, hasItemsChange }: { status: string; hasItemsChange: boolean }) {
+    if (!hasItemsChange) {
+      return true;
+    }
+
+    return !["issued", "dispensed", "partially_dispensed"].includes(status);
+  }
+
   static async createPrescription(data: PrescriptionInput) {
     return PrescriptionModel.create(data);
   }

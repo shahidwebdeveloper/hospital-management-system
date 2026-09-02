@@ -7,7 +7,19 @@ import type {
   UpdateLaboratoryStatusInput
 } from "./laboratory-validation.js";
 
+const allowedTransitions: Record<string, string[]> = {
+  requested: ["sample_collected", "cancelled"],
+  sample_collected: ["processing", "cancelled"],
+  processing: ["completed", "cancelled"],
+  completed: [],
+  cancelled: []
+};
+
 export class LaboratoryService {
+  static canTransitionStatus(currentStatus: string, nextStatus: string) {
+    return allowedTransitions[currentStatus]?.includes(nextStatus) ?? false;
+  }
+
   static async createLaboratoryRequest(data: CreateLaboratoryInput) {
     return await Laboratory.create({
       ...data,
@@ -17,7 +29,10 @@ export class LaboratoryService {
   }
 
   static async getAllRequests(scope: Record<string, unknown> = {}) {
-    return await Laboratory.find(scope).populate("patient").populate("doctor").sort({ createdAt: -1 });
+    return await Laboratory.find(scope)
+      .populate("patient")
+      .populate("doctor")
+      .sort({ createdAt: -1 });
   }
 
   static async getQueue() {
@@ -44,6 +59,15 @@ export class LaboratoryService {
       throw new Error("Invalid laboratory request id.");
     }
 
+    const request = await Laboratory.findById(id);
+    if (!request) {
+      return null;
+    }
+
+    if (!LaboratoryService.canTransitionStatus(request.status, data.status)) {
+      throw new Error(`Status transition from ${request.status} to ${data.status} is not allowed.`);
+    }
+
     const updateData: Record<string, unknown> = {
       status: data.status
     };
@@ -67,12 +91,22 @@ export class LaboratoryService {
       throw new Error("Invalid laboratory request id.");
     }
 
+    const request = await Laboratory.findById(id);
+    if (!request) {
+      return null;
+    }
+
+    if (request.status === "completed") {
+      throw new Error("A finalized laboratory result cannot be overwritten.");
+    }
+
     return await Laboratory.findByIdAndUpdate(
       id,
       {
         ...data,
         status: "completed",
-        completedAt: new Date()
+        completedAt: new Date(),
+        resultFinalizedAt: new Date()
       },
       {
         new: true,

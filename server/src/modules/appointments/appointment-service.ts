@@ -14,12 +14,53 @@ function asObjectId(value: string | Types.ObjectId | undefined) {
 }
 
 export class AppointmentService {
+  static hasSchedulingConflict({
+    doctorId,
+    appointmentDate,
+    existingStart,
+    existingEnd
+  }: {
+    doctorId: string;
+    appointmentDate: Date;
+    existingStart: Date;
+    existingEnd: Date;
+  }) {
+    if (!doctorId || !appointmentDate || !existingStart || !existingEnd) {
+      return false;
+    }
+
+    const candidate = new Date(appointmentDate).getTime();
+    const start = new Date(existingStart).getTime();
+    const end = new Date(existingEnd).getTime();
+
+    return candidate <= end && candidate >= start;
+  }
+
   static async createAppointment(data: AppointmentInput) {
     const payload = {
       ...data,
       patientId: asObjectId(String(data.patientId)) ?? data.patientId,
       doctorId: asObjectId(String(data.doctorId)) ?? data.doctorId
     };
+
+    if (payload.doctorId && payload.appointmentDate) {
+      const candidateDate = new Date(payload.appointmentDate);
+      const windowStart = new Date(candidateDate.getTime() - 30 * 60 * 1000);
+      const windowEnd = new Date(candidateDate.getTime() + 30 * 60 * 1000);
+      const conflict = await AppointmentModel.findOne({
+        doctorId: payload.doctorId,
+        appointmentDate: {
+          $gte: windowStart,
+          $lte: windowEnd
+        },
+        status: { $nin: ["cancelled", "no_show"] }
+      });
+
+      if (conflict) {
+        throw new Error("Doctor is already booked for this time slot.");
+      }
+    }
+
     return AppointmentModel.create(payload);
   }
 
@@ -37,6 +78,25 @@ export class AppointmentService {
       payload.patientId = asObjectId(String(payload.patientId)) ?? payload.patientId;
     if (payload.doctorId)
       payload.doctorId = asObjectId(String(payload.doctorId)) ?? payload.doctorId;
+
+    if (payload.doctorId && payload.appointmentDate) {
+      const candidateDate = new Date(payload.appointmentDate);
+      const windowStart = new Date(candidateDate.getTime() - 30 * 60 * 1000);
+      const windowEnd = new Date(candidateDate.getTime() + 30 * 60 * 1000);
+      const conflict = await AppointmentModel.findOne({
+        _id: { $ne: id },
+        doctorId: payload.doctorId,
+        appointmentDate: {
+          $gte: windowStart,
+          $lte: windowEnd
+        },
+        status: { $nin: ["cancelled", "no_show"] }
+      });
+
+      if (conflict) {
+        throw new Error("Doctor is already booked for this time slot.");
+      }
+    }
 
     return AppointmentModel.findByIdAndUpdate(id, payload, {
       new: true,

@@ -1,7 +1,25 @@
 import mongoose, { Schema, type InferSchemaType } from "mongoose";
 
+const vitalSignsSchema = new Schema(
+  {
+    temperature: { type: Number },
+    heartRate: { type: Number },
+    bloodPressure: { type: String },
+    oxygenSaturation: { type: Number },
+    respiratoryRate: { type: Number },
+    weight: { type: Number },
+    height: { type: Number }
+  },
+  { _id: false }
+);
+
 const medicalRecordSchema = new Schema(
   {
+    authorId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+      index: true
+    },
     patientId: {
       type: Schema.Types.ObjectId,
       ref: "Patient",
@@ -39,14 +57,27 @@ const medicalRecordSchema = new Schema(
       trim: true,
       default: ""
     },
+    nurseNotes: {
+      type: String,
+      trim: true,
+      default: ""
+    },
+    vitals: {
+      type: vitalSignsSchema,
+      default: undefined
+    },
     followUpDate: {
       type: Date,
       index: true
     },
     status: {
       type: String,
-      enum: ["draft", "active", "closed", "follow_up"],
+      enum: ["draft", "active", "closed", "follow_up", "finalized"],
       default: "active",
+      index: true
+    },
+    finalizedAt: {
+      type: Date,
       index: true
     }
   },

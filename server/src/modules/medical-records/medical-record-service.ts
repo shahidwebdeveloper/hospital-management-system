@@ -18,6 +18,22 @@ function asObjectId(value: string | Types.ObjectId | undefined) {
 }
 
 export class MedicalRecordService {
+  static canUpdateRecord({
+    status,
+    isAdmin,
+    isOwner
+  }: {
+    status: string;
+    isAdmin: boolean;
+    isOwner: boolean;
+  }) {
+    if (status === "finalized") {
+      return isAdmin;
+    }
+
+    return isOwner || isAdmin;
+  }
+
   static async createMedicalRecord(data: MedicalRecordInput) {
     const payload = {
       ...data,
