@@ -14,7 +14,9 @@ export class MedicalRecordController {
       const record = await MedicalRecordService.createMedicalRecord({
         ...validatedData,
         treatmentPlan: validatedData.treatmentPlan ?? "",
-        doctorNotes: validatedData.doctorNotes ?? ""
+        doctorNotes: validatedData.doctorNotes ?? "",
+        nurseNotes: "",
+        status: validatedData.status ?? "active"
       });
 
       return res
@@ -27,7 +29,9 @@ export class MedicalRecordController {
 
   static async getMedicalRecords(_req: Request, res: Response, next: NextFunction) {
     try {
-      const records = await MedicalRecordService.getMedicalRecords(await resourceScope("medical-record", _req.user!));
+      const records = await MedicalRecordService.getMedicalRecords(
+        await resourceScope("medical-record", _req.user!)
+      );
       return res.status(200).json({ success: true, data: records });
     } catch (error) {
       next(error);

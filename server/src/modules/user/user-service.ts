@@ -1,5 +1,6 @@
 import { auth } from "../../lib/auth.js";
 import { User } from "./user-model.js";
+import type { UserRole } from "./user-model.js";
 import { ApiError } from "../../utils/api-error.js";
 import { writeAuditLog } from "../../utils/audit.js";
 import type { CreateUserInput, UpdateUserInput, UserActor, UserListOptions } from "./user-types.js";
@@ -23,8 +24,34 @@ function assertRoleChangeAllowed(
 async function assertTargetManageAllowed(actor: UserActor, targetId: string) {
   const target = await User.findById(targetId).select("role").lean();
   if (!target) return;
+  if (target.role === "super_admin") {
+    throw new ApiError(403, "Super administrator accounts are protected");
+  }
   if (actor.role !== "super_admin" && ["super_admin", "admin"].includes(target.role)) {
     throw new ApiError(403, "Only a super administrator can manage administrator accounts");
+  }
+}
+
+async function assertAdministrativeAccessPreserved(
+  targetId: string,
+  requestedRole: UserRole | undefined,
+  isActive: boolean | undefined
+) {
+  const removesAdminAccess =
+    requestedRole !== undefined
+      ? !["super_admin", "admin"].includes(requestedRole)
+      : isActive === false;
+
+  if (!removesAdminAccess) return;
+
+  const remainingAdministrators = await User.countDocuments({
+    _id: { $ne: targetId },
+    isActive: true,
+    role: { $in: ["super_admin", "admin"] }
+  });
+
+  if (remainingAdministrators === 0) {
+    throw new ApiError(403, "At least one active administrator account must remain");
   }
 }
 
@@ -159,9 +186,12 @@ export class UserService {
     /**
      * Never store the password in the HMS User collection.
      */
-    const { password: _password, ...userData } = data;
+    const userData = { ...data };
+    delete userData.password;
+    delete userData.isVerified;
     await assertTargetManageAllowed(actor, id);
     assertRoleChangeAllowed(actor, id, userData.role);
+    await assertAdministrativeAccessPreserved(id, userData.role, userData.isActive);
     if (actor.id === id && userData.isActive === false)
       throw new ApiError(403, "You cannot deactivate your own account");
     if (userData.isActive === false) {
@@ -173,6 +203,7 @@ export class UserService {
     }
     userData.updatedBy = actor.id as never;
 
+    const previousRole = (await User.findById(id).select("role").lean())?.role;
     const updatedUser = await User.findByIdAndUpdate(id, userData, {
       new: true,
       runValidators: true
@@ -185,7 +216,7 @@ export class UserService {
       targetId: id,
       action: "role_changed",
       details: {
-        previousRole: (await User.findById(id).select("role").lean())?.role,
+        previousRole,
         newRole: userData.role
       }
     });

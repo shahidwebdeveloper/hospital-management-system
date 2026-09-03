@@ -14,7 +14,7 @@ export const createMedicalRecordSchema = z.object({
     }
     return value;
   }, z.date().optional()),
-  status: z.enum(["draft", "active", "closed", "follow_up"]).default("active")
+  status: z.enum(["draft", "active", "closed", "follow_up", "finalized"]).default("active")
 });
 
 export const updateMedicalRecordSchema = z.object({
@@ -31,7 +31,7 @@ export const updateMedicalRecordSchema = z.object({
     }
     return value;
   }, z.date().optional()),
-  status: z.enum(["draft", "active", "closed", "follow_up"]).optional()
+  status: z.enum(["draft", "active", "closed", "follow_up", "finalized"]).optional()
 });
 
 export const medicalRecordIdSchema = z.object({

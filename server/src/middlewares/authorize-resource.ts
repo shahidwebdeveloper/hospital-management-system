@@ -9,14 +9,20 @@ import { PatientModel } from "../modules/patients/patient-model.js";
 import { PrescriptionModel } from "../modules/prescriptions/prescription-model.js";
 
 export type ProtectedResource =
-  | "patient"
-  | "appointment"
-  | "medical-record"
-  | "prescription"
-  | "laboratory"
-  | "invoice";
+  "patient" | "appointment" | "medical-record" | "prescription" | "laboratory" | "invoice";
 
-export type ResourceDocument = { _id: { toString(): string }; patientId?: string; doctorId?: string; patient?: { toString(): string }; doctor?: { toString(): string }; userId?: { toString(): string } };
+export type ResourceDocument = {
+  _id: { toString(): string };
+  patientId?: string;
+  doctorId?: string;
+  patient?: { toString(): string };
+  doctor?: { toString(): string };
+  userId?: { toString(): string };
+};
+
+function idValue(value: string | { toString(): string } | undefined) {
+  return value === undefined ? undefined : value.toString();
+}
 
 const elevatedRoles = new Set(["super_admin", "admin"]);
 
@@ -42,24 +48,38 @@ async function loadResource(resource: ProtectedResource, id: string) {
   }
 }
 
-export function canAccessResource(user: NonNullable<Request["user"]>, resource: ProtectedResource, document: ResourceDocument, patientId: string | null) {
+export function canAccessResource(
+  user: NonNullable<Request["user"]>,
+  resource: ProtectedResource,
+  document: ResourceDocument,
+  patientId: string | null
+) {
   if (elevatedRoles.has(user.role)) return true;
 
   if (user.role === "patient") {
-    const relatedPatientId = resource === "patient" ? document._id.toString() : document.patientId ?? document.patient?.toString();
+    const relatedPatientId =
+      resource === "patient"
+        ? document._id.toString()
+        : (document.patientId ?? document.patient?.toString());
     return Boolean(patientId && relatedPatientId === patientId);
   }
 
   if (user.role === "doctor") {
-    return (resource === "appointment" || resource === "medical-record" || resource === "prescription" || resource === "laboratory") &&
-      (document.doctorId === user.id || document.doctor?.toString() === user.id);
+    return (
+      (resource === "appointment" ||
+        resource === "medical-record" ||
+        resource === "prescription" ||
+        resource === "laboratory") &&
+      (idValue(document.doctorId) === user.id || idValue(document.doctor) === user.id)
+    );
   }
 
   // Nurses have no assignment model yet, so they must not receive broad access until one exists.
   if (user.role === "nurse") return false;
   if (user.role === "lab_technician") return resource === "laboratory";
   if (user.role === "pharmacist") return resource === "prescription";
-  if (user.role === "receptionist") return resource === "patient" || resource === "appointment" || resource === "invoice";
+  if (user.role === "receptionist")
+    return resource === "patient" || resource === "appointment" || resource === "invoice";
   return false;
 }
 
@@ -73,7 +93,9 @@ export function authorizeResource(resource: ProtectedResource) {
 
       const patientId = req.user.role === "patient" ? await patientIdForUser(req.user.id) : null;
       if (!canAccessResource(req.user, resource, document as ResourceDocument, patientId)) {
-        return res.status(403).json({ success: false, message: "You do not have access to this record" });
+        return res
+          .status(403)
+          .json({ success: false, message: "You do not have access to this record" });
       }
 
       req.authorizedResource = document;
@@ -84,17 +106,26 @@ export function authorizeResource(resource: ProtectedResource) {
   };
 }
 
-export async function resourceScope(resource: ProtectedResource, user: NonNullable<Request["user"]>): Promise<FilterQuery<unknown>> {
+export async function resourceScope(
+  resource: ProtectedResource,
+  user: NonNullable<Request["user"]>
+): Promise<FilterQuery<unknown>> {
   if (elevatedRoles.has(user.role)) return {};
   if (user.role === "patient") {
     const patientId = await patientIdForUser(user.id);
     if (!patientId) return { _id: null };
-    return resource === "patient" ? { _id: patientId } : resource === "laboratory" ? { patient: patientId } : { patientId };
+    return resource === "patient"
+      ? { _id: patientId }
+      : resource === "laboratory"
+        ? { patient: patientId }
+        : { patientId };
   }
-  if (user.role === "doctor") return resource === "laboratory" ? { doctor: user.id } : { doctorId: user.id };
+  if (user.role === "doctor")
+    return resource === "laboratory" ? { doctor: user.id } : { doctorId: user.id };
   if (user.role === "nurse") return { _id: null };
   if (user.role === "lab_technician") return resource === "laboratory" ? {} : { _id: null };
   if (user.role === "pharmacist") return resource === "prescription" ? {} : { _id: null };
-  if (user.role === "receptionist") return ["patient", "appointment", "invoice"].includes(resource) ? {} : { _id: null };
+  if (user.role === "receptionist")
+    return ["patient", "appointment", "invoice"].includes(resource) ? {} : { _id: null };
   return { _id: null };
 }

@@ -125,7 +125,7 @@ export const modulePermissions = {
   },
   "medical-records": {
     super_admin: { level: "manage", note: "Manage medical records" },
-    admin: { level: "manage", note: "Manage medical records" },
+    admin: { level: "view", note: "View medical records" },
     doctor: { level: "own", note: "Own patients only" },
     nurse: { level: "view", note: "View care records" },
     receptionist: { level: "none", note: "No medical record access" },
@@ -135,7 +135,7 @@ export const modulePermissions = {
   },
   prescriptions: {
     super_admin: { level: "manage", note: "Manage prescriptions" },
-    admin: { level: "manage", note: "Manage prescriptions" },
+    admin: { level: "view", note: "View prescriptions" },
     doctor: { level: "create", note: "Create prescriptions" },
     nurse: { level: "view", note: "View prescriptions" },
     receptionist: { level: "none", note: "No prescription access" },
@@ -145,7 +145,7 @@ export const modulePermissions = {
   },
   laboratory: {
     super_admin: { level: "manage", note: "Manage laboratory" },
-    admin: { level: "manage", note: "Manage laboratory" },
+    admin: { level: "view", note: "View laboratory" },
     doctor: { level: "create", note: "Request and view tests" },
     nurse: { level: "view", note: "View lab workflow" },
     receptionist: { level: "none", note: "No laboratory access" },
@@ -155,7 +155,7 @@ export const modulePermissions = {
   },
   pharmacy: {
     super_admin: { level: "manage", note: "Manage pharmacy" },
-    admin: { level: "manage", note: "Manage pharmacy" },
+    admin: { level: "view", note: "View pharmacy" },
     doctor: { level: "create", note: "Request medicines" },
     nurse: { level: "none", note: "No pharmacy access" },
     receptionist: { level: "none", note: "No pharmacy access" },
@@ -240,27 +240,61 @@ export type PermissionAction = (typeof permissionActions)[number];
 
 export type Permission =
   | "dashboard:view"
+  | "dashboard:view_statistics"
+  | "users:view"
+  | "users:create"
+  | "users:update"
+  | "users:delete"
+  | "users:activate"
+  | "users:deactivate"
+  | "users:assign_role"
+  | "roles:view"
+  | "roles:create"
+  | "roles:update"
+  | "roles:delete"
+  | "permissions:view"
+  | "permissions:assign"
+  | "departments:view"
+  | "departments:create"
+  | "departments:update"
+  | "departments:delete"
   | "patients:view"
   | "patients:create"
   | "patients:update"
   | "patients:delete"
+  | "patients:view_history"
+  | "patients:view_medical_records"
   | "doctors:view"
   | "doctors:create"
   | "doctors:update"
   | "doctors:delete"
+  | "doctors:assign_department"
+  | "doctors:view_schedule"
+  | "doctors:manage_schedule"
   | "appointments:view"
   | "appointments:create"
   | "appointments:update"
   | "appointments:delete"
+  | "appointments:cancel"
+  | "appointments:assign_doctor"
   | "medical-records:view"
   | "medical-records:create"
   | "medical-records:update"
   | "medical-records:delete"
+  | "medical-records:view_history"
   | "prescriptions:view"
   | "prescriptions:create"
   | "prescriptions:update"
   | "prescriptions:delete"
+  | "prescriptions:approve"
   | "laboratory:view"
+  | "laboratory:create_request"
+  | "laboratory:update_request"
+  | "laboratory:collect_sample"
+  | "laboratory:process_test"
+  | "laboratory:enter_result"
+  | "laboratory:update_result"
+  | "laboratory:approve_result"
   | "laboratory:create"
   | "laboratory:manage"
   | "laboratory:delete"
@@ -268,19 +302,50 @@ export type Permission =
   | "pharmacy:create"
   | "pharmacy:update"
   | "pharmacy:delete"
+  | "pharmacy:dispense"
+  | "pharmacy:create_medicine"
+  | "pharmacy:update_medicine"
+  | "pharmacy:delete_medicine"
+  | "pharmacy:manage_inventory"
   | "billing:view"
   | "billing:create"
   | "billing:update"
   | "billing:delete"
-  | "users:view"
-  | "users:create"
-  | "users:update"
-  | "users:delete"
+  | "billing:process_payment"
+  | "billing:refund"
+  | "billing:view_reports"
+  | "notifications:view"
+  | "notifications:create"
+  | "notifications:send"
+  | "notifications:delete"
+  | "files:view"
+  | "files:upload"
+  | "files:update"
+  | "files:delete"
+  | "audit_logs:view"
   | "settings:view"
   | "settings:update";
 
 export const permissionRoles = {
   "dashboard:view": appRoles,
+  "dashboard:view_statistics": ["super_admin", "admin"],
+  "users:view": ["super_admin", "admin"],
+  "users:create": ["super_admin", "admin"],
+  "users:update": ["super_admin", "admin"],
+  "users:delete": ["super_admin", "admin"],
+  "users:activate": ["super_admin", "admin"],
+  "users:deactivate": ["super_admin", "admin"],
+  "users:assign_role": ["super_admin", "admin"],
+  "roles:view": ["super_admin"],
+  "roles:create": ["super_admin"],
+  "roles:update": ["super_admin"],
+  "roles:delete": ["super_admin"],
+  "permissions:view": ["super_admin"],
+  "permissions:assign": ["super_admin"],
+  "departments:view": ["super_admin", "admin"],
+  "departments:create": ["super_admin", "admin"],
+  "departments:update": ["super_admin", "admin"],
+  "departments:delete": ["super_admin", "admin"],
   "patients:view": [
     "super_admin",
     "admin",
@@ -290,25 +355,34 @@ export const permissionRoles = {
     "lab_technician",
     "patient"
   ],
-  "patients:create": ["super_admin", "admin", "doctor", "receptionist"],
+  "patients:create": ["super_admin", "admin", "receptionist"],
   "patients:update": ["super_admin", "admin", "doctor", "nurse", "receptionist"],
   "patients:delete": ["super_admin", "admin"],
+  "patients:view_history": ["super_admin", "admin", "doctor", "nurse", "lab_technician"],
+  "patients:view_medical_records": ["super_admin", "admin", "doctor", "nurse"],
   "doctors:view": ["super_admin", "admin", "doctor", "nurse", "receptionist", "patient"],
   "doctors:create": ["super_admin", "admin"],
   "doctors:update": ["super_admin", "admin"],
   "doctors:delete": ["super_admin", "admin"],
+  "doctors:assign_department": ["super_admin", "admin"],
+  "doctors:view_schedule": ["super_admin", "admin", "doctor", "nurse", "receptionist", "patient"],
+  "doctors:manage_schedule": ["super_admin", "admin", "doctor"],
   "appointments:view": ["super_admin", "admin", "doctor", "nurse", "receptionist", "patient"],
   "appointments:create": ["super_admin", "admin", "doctor", "receptionist", "patient"],
   "appointments:update": ["super_admin", "admin", "doctor", "receptionist", "patient"],
+  "appointments:cancel": ["super_admin", "admin", "doctor", "receptionist", "patient"],
   "appointments:delete": ["super_admin", "admin"],
+  "appointments:assign_doctor": ["super_admin", "admin", "receptionist"],
   "medical-records:view": ["super_admin", "admin", "doctor", "nurse", "patient"],
-  "medical-records:create": ["super_admin", "admin", "doctor"],
-  "medical-records:update": ["super_admin", "admin", "doctor"],
-  "medical-records:delete": ["super_admin", "admin"],
+  "medical-records:create": ["super_admin", "doctor"],
+  "medical-records:update": ["super_admin", "doctor", "nurse"],
+  "medical-records:delete": ["super_admin"],
+  "medical-records:view_history": ["super_admin", "admin", "doctor", "nurse", "patient"],
   "prescriptions:view": ["super_admin", "admin", "doctor", "nurse", "pharmacist", "patient"],
-  "prescriptions:create": ["super_admin", "admin", "doctor"],
-  "prescriptions:update": ["super_admin", "admin", "doctor"],
-  "prescriptions:delete": ["super_admin", "admin"],
+  "prescriptions:create": ["super_admin", "doctor"],
+  "prescriptions:update": ["super_admin", "doctor"],
+  "prescriptions:delete": ["super_admin"],
+  "prescriptions:approve": ["super_admin", "doctor"],
   "laboratory:view": [
     "super_admin",
     "admin",
@@ -318,21 +392,41 @@ export const permissionRoles = {
     "pharmacist",
     "patient"
   ],
-  "laboratory:create": ["super_admin", "admin", "doctor"],
-  "laboratory:manage": ["super_admin", "admin", "lab_technician"],
-  "laboratory:delete": ["super_admin", "admin"],
-  "pharmacy:view": ["super_admin", "admin", "doctor", "pharmacist"],
-  "pharmacy:create": ["super_admin", "admin", "pharmacist"],
-  "pharmacy:update": ["super_admin", "admin", "pharmacist"],
-  "pharmacy:delete": ["super_admin", "admin"],
+  "laboratory:create_request": ["super_admin", "doctor"],
+  "laboratory:update_request": ["super_admin", "lab_technician"],
+  "laboratory:collect_sample": ["super_admin", "lab_technician"],
+  "laboratory:process_test": ["super_admin", "lab_technician"],
+  "laboratory:enter_result": ["super_admin", "lab_technician"],
+  "laboratory:update_result": ["super_admin", "lab_technician"],
+  "laboratory:approve_result": ["super_admin", "lab_technician"],
+  "laboratory:create": ["super_admin", "doctor"],
+  "laboratory:manage": ["super_admin", "lab_technician"],
+  "laboratory:delete": ["super_admin"],
+  "pharmacy:view": ["super_admin", "admin", "doctor", "pharmacist", "patient"],
+  "pharmacy:dispense": ["super_admin", "pharmacist"],
+  "pharmacy:create_medicine": ["super_admin", "pharmacist"],
+  "pharmacy:update_medicine": ["super_admin", "pharmacist"],
+  "pharmacy:delete_medicine": ["super_admin", "pharmacist"],
+  "pharmacy:manage_inventory": ["super_admin", "pharmacist"],
+  "pharmacy:create": ["super_admin", "pharmacist"],
+  "pharmacy:update": ["super_admin", "pharmacist"],
+  "pharmacy:delete": ["super_admin"],
   "billing:view": ["super_admin", "admin", "doctor", "receptionist", "patient"],
   "billing:create": ["super_admin", "admin", "receptionist"],
   "billing:update": ["super_admin", "admin", "receptionist"],
   "billing:delete": ["super_admin", "admin"],
-  "users:view": ["super_admin", "admin"],
-  "users:create": ["super_admin", "admin"],
-  "users:update": ["super_admin", "admin"],
-  "users:delete": ["super_admin", "admin"],
+  "billing:process_payment": ["super_admin", "admin", "receptionist"],
+  "billing:refund": ["super_admin", "admin"],
+  "billing:view_reports": ["super_admin", "admin"],
+  "notifications:view": appRoles,
+  "notifications:create": ["super_admin", "admin"],
+  "notifications:send": ["super_admin", "admin"],
+  "notifications:delete": ["super_admin", "admin"],
+  "files:view": appRoles,
+  "files:upload": appRoles,
+  "files:update": ["super_admin", "admin"],
+  "files:delete": ["super_admin", "admin"],
+  "audit_logs:view": ["super_admin"],
   "settings:view": appRoles,
   "settings:update": ["super_admin"]
 } satisfies Record<Permission, readonly AppRole[]>;

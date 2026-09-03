@@ -17,8 +17,10 @@ export type LaboratoryPriority = (typeof LaboratoryPriority)[number];
 export interface ILaboratory {
   patient: Types.ObjectId;
   doctor: Types.ObjectId;
+  technicianId?: Types.ObjectId;
 
   testName: string;
+  testType?: string;
   category: string;
 
   priority: LaboratoryPriority;
@@ -34,10 +36,19 @@ export interface ILaboratory {
   remarks?: string;
 
   status: LaboratoryStatus;
+  sampleMetadata?: {
+    sampleType?: string;
+    accessionCode?: string;
+    collectedBy?: string;
+    collectionTime?: Date;
+    container?: string;
+    location?: string;
+  };
 
   requestedAt: Date;
 
   sampleCollectedAt?: Date;
 
   completedAt?: Date;
+  resultFinalizedAt?: Date;
 }

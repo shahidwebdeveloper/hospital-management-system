@@ -35,7 +35,12 @@ describe("authorization hardening", () => {
   });
 
   it("prevents patient cross-isolation for resource access", () => {
-    const user = { id: "user-patient-1", email: "patient@example.com", role: "patient" as const };
+    const user = {
+      id: "user-patient-1",
+      name: "Patient User",
+      email: "patient@example.com",
+      role: "patient" as const
+    };
 
     expect(
       canAccessResource(

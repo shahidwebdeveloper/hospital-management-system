@@ -19,6 +19,13 @@ export const createUserSchema = z.object({
 });
 
 export const updateUserSchema = createUserSchema
+  .pick({
+    name: true,
+    email: true,
+    phone: true,
+    role: true,
+    isActive: true
+  })
   .partial()
   .refine((data) => Object.keys(data).length > 0, {
     message: "At least one field is required to update",

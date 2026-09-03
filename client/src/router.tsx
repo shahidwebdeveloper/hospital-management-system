@@ -45,6 +45,13 @@ function withRoles(element: ReactElement, module: AppRouteModule) {
   return <ProtectedRoute allowedRoles={moduleAccess[module]}>{element}</ProtectedRoute>;
 }
 
+function withPermission(
+  element: ReactElement,
+  permission: Parameters<typeof RequirePermission>[0]["permission"]
+) {
+  return <RequirePermission permission={permission}>{element}</RequirePermission>;
+}
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -82,18 +89,30 @@ export const router = createBrowserRouter([
         path: "medical-records",
         children: [
           { index: true, element: withRoles(<MedicalRecordListPage />, "medical-records") },
-          { path: "new", element: withRoles(<MedicalRecordFormPage />, "medical-records") },
+          {
+            path: "new",
+            element: withPermission(<MedicalRecordFormPage />, "medical-records:create")
+          },
           { path: ":id", element: withRoles(<MedicalRecordDetailsPage />, "medical-records") },
-          { path: ":id/edit", element: withRoles(<MedicalRecordFormPage />, "medical-records") }
+          {
+            path: ":id/edit",
+            element: withPermission(<MedicalRecordFormPage />, "medical-records:update")
+          }
         ]
       },
       {
         path: "prescriptions",
         children: [
           { index: true, element: withRoles(<PrescriptionListPage />, "prescriptions") },
-          { path: "new", element: withRoles(<PrescriptionFormPage />, "prescriptions") },
+          {
+            path: "new",
+            element: withPermission(<PrescriptionFormPage />, "prescriptions:create")
+          },
           { path: ":id", element: withRoles(<PrescriptionDetailsPage />, "prescriptions") },
-          { path: ":id/edit", element: withRoles(<PrescriptionFormPage />, "prescriptions") }
+          {
+            path: ":id/edit",
+            element: withPermission(<PrescriptionFormPage />, "prescriptions:update")
+          }
         ]
       },
       {
@@ -108,27 +127,53 @@ export const router = createBrowserRouter([
       {
         path: "pharmacy",
         children: [
-          { index: true, element: <RequirePermission permission="pharmacy:view"><PharmacyListPage /></RequirePermission> },
-          { path: "new", element: withRoles(<PharmacyFormPage />, "pharmacy") },
+          {
+            index: true,
+            element: (
+              <RequirePermission permission="pharmacy:view">
+                <PharmacyListPage />
+              </RequirePermission>
+            )
+          },
+          {
+            path: "new",
+            element: withPermission(<PharmacyFormPage />, "pharmacy:create_medicine")
+          },
           { path: ":id", element: withRoles(<PharmacyDetailsPage />, "pharmacy") },
-          { path: ":id/edit", element: withRoles(<PharmacyFormPage />, "pharmacy") }
+          {
+            path: ":id/edit",
+            element: withPermission(<PharmacyFormPage />, "pharmacy:update_medicine")
+          }
         ]
       },
       {
         path: "billing",
         children: [
           { index: true, element: withRoles(<BillingListPage />, "billing") },
-          { path: "new", element: withRoles(<BillingFormPage />, "billing") },
+          { path: "new", element: withPermission(<BillingFormPage />, "billing:create") },
           { path: ":id", element: withRoles(<BillingDetailsPage />, "billing") },
-          { path: ":id/edit", element: withRoles(<BillingFormPage />, "billing") }
+          { path: ":id/edit", element: withPermission(<BillingFormPage />, "billing:update") }
         ]
       },
       {
         path: "laboratory",
         children: [
-          { index: true, element: <RequirePermission permission="laboratory:manage"><LaboratoryQueuePage /></RequirePermission> },
-          { path: "request", element: withRoles(<RequestTestPage />, "laboratory") },
-          { path: "result/:id", element: withRoles(<ResultEntryPage />, "laboratory") },
+          {
+            index: true,
+            element: (
+              <RequirePermission permission="laboratory:manage">
+                <LaboratoryQueuePage />
+              </RequirePermission>
+            )
+          },
+          {
+            path: "request",
+            element: withPermission(<RequestTestPage />, "laboratory:create_request")
+          },
+          {
+            path: "result/:id",
+            element: withPermission(<ResultEntryPage />, "laboratory:enter_result")
+          },
           { path: ":id", element: withRoles(<LaboratoryDetailsPage />, "laboratory") }
         ]
       },
